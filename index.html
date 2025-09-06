@@ -8,10 +8,10 @@
   <meta name="description" content="Contratá profesionales de confianza en La Rioja: plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería. Atención rápida por WhatsApp." />
 
   <!-- Estilos -->
-  <link rel="preload" href="./css/styles.css?v=1.1.0" as="style" />
-  <link rel="stylesheet" href="./css/styles.css?v=1.1.0" />
+  <link rel="preload" href="./css/styles.css?v=1.2.0" as="style" />
+  <link rel="stylesheet" href="./css/styles.css?v=1.2.0" />
 
-  <!-- AOS Animations (CSS) -->
+  <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
   <!-- Fallback mínimo para ícones se o CSS não carregar -->
@@ -32,7 +32,7 @@
 
       <nav class="nav" id="navMenu">
         <a class="nav-link" href="#servicios">Servicios</a>
-        <a class="nav-link" href="#precios">Precios</a>
+        <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
         <a class="nav-link" href="#contacto">Contacto</a>
         <button class="btn-primary" onclick="openServiceModal()">Solicitar servicio</button>
       </nav>
@@ -40,19 +40,43 @@
   </header>
 
   <!-- Hero -->
-  <section class="hero" data-aos="fade-up">
+  <section class="hero hero--modern" data-aos="fade-up">
     <div class="container hero-inner">
       <div class="hero-copy">
-        <h1>Profesionales confiables, <br/>cuando los necesitás</h1>
-        <p>Plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería en La Rioja. Pedí un profesional ahora por WhatsApp o completá el formulario.</p>
-        <div class="hero-actions">
-          <a class="btn-primary" href="https://wa.me/543804123456?text=Hola!%20Necesito%20un%20servicio" target="_blank" rel="noopener">Hablar por WhatsApp</a>
-          <button class="btn-secondary" onclick="openServiceModal()">Solicitar servicio</button>
+        <span class="badge">★ +2,000 servicios completados</span>
+        <h1>
+          Conectamos tu hogar<br>
+          con los mejores <span class="accent">profesionales</span><br>
+          de La Rioja
+        </h1>
+        <p>Encontrá y contratá servicios de confianza para tu hogar. Desde limpieza hasta reparaciones, tenemos el profesional perfecto para vos.</p>
+
+        <!-- Barra de búsqueda -->
+        <form id="searchForm" class="search-bar" role="search" aria-label="Buscar servicios">
+          <div class="search-input">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79L20 21.5 21.5 20l-6-6zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/></svg>
+            <input id="searchInput" type="search" placeholder="¿Qué servicio necesitás?" autocomplete="off">
+          </div>
+          <button class="btn-primary search-btn" type="submit">Buscar</button>
+        </form>
+
+        <div class="metrics-row">
+          <span class="metric"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.96 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/></svg> +500 profesionales</span>
+          <span class="metric"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.58L19 9z"/></svg> 100% verificados</span>
         </div>
       </div>
       <div class="hero-media" aria-hidden="true">
-        <!-- espaço para imagem/banner: ./images/hero.webp -->
-        <div class="hero-placeholder"></div>
+        <div class="hero-photo">
+          <!-- substitua por ./images/hero.webp se desejar -->
+        </div>
+        <div class="hero-rating card">
+          <div class="stars">★★★★★</div>
+          <div class="rating-text">
+            <strong>4.9/5</strong>
+            <span>Calificación promedio</span>
+          </div>
+        </div>
+        <div class="hero-badge card">✅ Carlos M.<br><small>Electricista certificado</small></div>
       </div>
     </div>
   </section>
@@ -61,76 +85,67 @@
   <section id="servicios" class="section" data-aos="fade-up">
     <div class="container">
       <h2 class="section-title">Servicios más solicitados</h2>
-      <div class="services-grid">
-        <article class="service-card">
+      <div class="services-grid" id="servicesGrid">
+        <article class="service-card" data-tags="plomeria agua cañeria caneria grifo baño cocina">
           <h3>Plomería</h3>
           <p>Fugas, cañerías, grifería y sanitarios.</p>
-          <button class="link" onclick="openServiceModal('plomeria')">Pedir plomero</button>
+          <button class="link" onclick="openServiceModal('Plomería')">Pedir plomero</button>
         </article>
-        <article class="service-card">
+        <article class="service-card" data-tags="electricidad electrico tomas luminarias tablero cableado corto">
           <h3>Electricidad</h3>
           <p>Tableros, tomas, luminarias y urgencias.</p>
-          <button class="link" onclick="openServiceModal('electricidad')">Pedir electricista</button>
+          <button class="link" onclick="openServiceModal('Electricidad')">Pedir electricista</button>
         </article>
-        <article class="service-card">
+        <article class="service-card" data-tags="aire acondicionado split mantenimiento carga gas instalacion">
           <h3>Aire Acondicionado</h3>
           <p>Instalación, mantenimiento y carga de gas.</p>
-          <button class="link" onclick="openServiceModal('aire')">Pedir técnico</button>
+          <button class="link" onclick="openServiceModal('Aire Acondicionado')">Pedir técnico</button>
         </article>
-        <article class="service-card">
+        <article class="service-card" data-tags="carpinteria madera muebles puertas reparaciones">
           <h3>Carpintería</h3>
           <p>Muebles a medida, puertas y reparaciones.</p>
-          <button class="link" onclick="openServiceModal('carpinteria')">Pedir carpintero</button>
+          <button class="link" onclick="openServiceModal('Carpintería')">Pedir carpintero</button>
         </article>
-        <article class="service-card">
+        <article class="service-card" data-tags="limpieza hogar oficina fin de obra aseo">
           <h3>Limpieza</h3>
           <p>Hogares, oficinas y fin de obra.</p>
-          <button class="link" onclick="openServiceModal('limpieza')">Pedir limpieza</button>
+          <button class="link" onclick="openServiceModal('Limpieza')">Pedir limpieza</button>
         </article>
-        <article class="service-card">
+        <article class="service-card" data-tags="jardineria cesped poda plantas riego jardin">
           <h3>Jardinería</h3>
           <p>Poda, césped y mantenimiento general.</p>
-          <button class="link" onclick="openServiceModal('jardineria')">Pedir jardinero</button>
+          <button class="link" onclick="openServiceModal('Jardinería')">Pedir jardinero</button>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- Precios -->
-  <section id="precios" class="section" data-aos="fade-up">
+  <!-- Cómo Funciona -->
+  <section id="como-funciona" class="section how" data-aos="fade-up">
     <div class="container">
-      <h2 class="section-title">Precios orientativos</h2>
-      <div class="pricing-grid">
-        <article class="price-card">
-          <h3>Visita básica</h3>
-          <p class="price">$8.000</p>
-          <ul>
-            <li>Diagnóstico en el lugar</li>
-            <li>Presupuesto sin cargo</li>
-            <li>Aplicable a todos los oficios</li>
-          </ul>
-          <button class="btn-primary" onclick="openServiceModal()">Solicitar</button>
-        </article>
-        <article class="price-card">
-          <h3>Mano de obra por hora</h3>
-          <p class="price">$10.000</p>
-          <ul>
-            <li>Materiales no incluidos</li>
-            <li>Garantía por escrito</li>
-            <li>Profesionales verificados</li>
-          </ul>
-          <button class="btn-primary" onclick="openServiceModal()">Solicitar</button>
-        </article>
-        <article class="price-card">
-          <h3>Trabajo programado</h3>
-          <p class="price">A medida</p>
-          <ul>
-            <li>Obras y proyectos</li>
-            <li>Planificación y cronograma</li>
-            <li>Atención preferencial</li>
-          </ul>
-          <button class="btn-primary" onclick="openServiceModal()">Solicitar</button>
-        </article>
+      <h2 class="section-title center">Cómo Funciona</h2>
+      <p class="how-subtitle">En pocos pasos accedés a un servicio de calidad, sin complicaciones.</p>
+      <div class="how-grid">
+        <div class="how-step card">
+          <div class="step-number">1</div>
+          <h3>Elegí el servicio</h3>
+          <p>Seleccioná la categoría y describí el trabajo que necesitás.</p>
+        </div>
+        <div class="how-step card">
+          <div class="step-number">2</div>
+          <h3>Reservá online</h3>
+          <p>Elegí día (desde mañana) y horario disponible.</p>
+        </div>
+        <div class="how-step card">
+          <div class="step-number">3</div>
+          <h3>Recibí al profesional</h3>
+          <p>Un técnico calificado llegará y realizará el trabajo con excelencia.</p>
+        </div>
+        <div class="how-step card">
+          <div class="step-number">4</div>
+          <h3>Calificá y pagá</h3>
+          <p>Tu opinión nos ayuda a garantizar la calidad del servicio.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -232,66 +247,90 @@
     </div>
   </footer>
 
-  <!-- Service Modal -->
+  <!-- Modal de Solicitud / Agenda -->
   <div id="serviceModal" class="modal" aria-hidden="true">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
       <button class="modal-close" onclick="closeServiceModal()" aria-label="Cerrar">&times;</button>
-      <h2 id="serviceModalTitle">Solicitar Servicio</h2>
-      <form id="serviceForm" novalidate>
-        <div class="form-group">
-          <label for="serviceType">Tipo de Servicio</label>
-          <select id="serviceType" required>
-            <option value="">Selecciona un servicio</option>
-            <option value="plomeria">Plomería</option>
-            <option value="electricidad">Electricidad</option>
-            <option value="aire">Aire Acondicionado</option>
-            <option value="carpinteria">Carpintería</option>
-            <option value="limpieza">Limpieza</option>
-            <option value="jardineria">Jardinería</option>
-          </select>
-        </div>
 
-        <div class="form-group">
-          <label>¿Cuándo lo necesitas?</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="urgency" value="ahora" checked />
-              <span>Ahora mismo</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="urgency" value="hoy" />
-              <span>Hoy</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="urgency" value="programar" />
-              <span>Programar</span>
-            </label>
-          </div>
-        </div>
+      <div class="modal-grid">
+        <!-- Lado informativo -->
+        <aside class="modal-info">
+          <h3 id="serviceModalTitle">Servicio a tu medida</h3>
+          <ul class="checklist">
+            <li>✅ Técnicos verificados y evaluados</li>
+            <li>✅ Presupuesto claro antes de comenzar</li>
+            <li>✅ Garantía por escrito en la mano de obra</li>
+            <li>✅ Atención de 8:00 a 20:00</li>
+          </ul>
+          <div class="notice">Cancelación sin costo hasta <strong>24h</strong> antes del horario reservado.</div>
+        </aside>
 
-        <div class="form-group">
-          <label for="description">Describe brevemente el problema</label>
-          <textarea id="description" rows="3" placeholder="Ej: Pérdida de agua en el baño..."></textarea>
-        </div>
+        <!-- Formulario -->
+        <div class="modal-form">
+          <form id="serviceForm" novalidate>
+            <div class="form-group">
+              <label for="serviceType">Tipo de Servicio</label>
+              <select id="serviceType" required>
+                <option value="">Selecciona un servicio</option>
+                <option>Plomería</option>
+                <option>Electricidad</option>
+                <option>Aire Acondicionado</option>
+                <option>Carpintería</option>
+                <option>Limpieza</option>
+                <option>Jardinería</option>
+              </select>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Tu Nombre</label>
-            <input type="text" id="name" required />
-          </div>
-          <div class="form-group">
-            <label for="phone">Teléfono</label>
-            <input type="tel" id="phone" required />
-          </div>
-        </div>
+            <div class="form-group">
+              <label>¿Cuándo lo necesitás?</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="urgency" value="ahora" />
+                  <span>Lo antes posible</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="urgency" value="programar" checked />
+                  <span>Programar</span>
+                </label>
+              </div>
+            </div>
 
-        <div class="form-group">
-          <label for="address">Dirección</label>
-          <input type="text" id="address" placeholder="Calle y número, La Rioja" required />
-        </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="scheduleDate">Día (desde mañana)</label>
+                <input type="date" id="scheduleDate" required>
+              </div>
+              <div class="form-group">
+                <label for="scheduleTime">Horario</label>
+                <select id="scheduleTime" required></select>
+              </div>
+            </div>
 
-        <button type="submit" class="btn-primary btn-block">Solicitar Profesional</button>
-      </form>
+            <div class="form-group">
+              <label for="description">Descripción del trabajo</label>
+              <textarea id="description" rows="3" placeholder="Ej: Pérdida de agua en el baño..."></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Tu Nombre</label>
+                <input type="text" id="name" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">Teléfono</label>
+                <input type="tel" id="phone" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Dirección</label>
+              <input type="text" id="address" placeholder="Calle y número, La Rioja" required />
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">Confirmar y Enviar por WhatsApp</button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -304,6 +343,6 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.1.0"></script>
+  <script defer src="./js/main.js?v=1.2.0"></script>
 </body>
 </html>
