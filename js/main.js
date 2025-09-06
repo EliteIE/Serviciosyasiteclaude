@@ -1,6 +1,10 @@
 /**
  * Servicios Ya - JavaScript Principal (GitHub Pages safe)
- * v1.1.0
+ * v1.2.0
+ * - Busca de serviços no hero (filtra e rola para a seção)
+ * - Modal de agendamento com data mínima = amanhã (24h à frente)
+ * - Horários de hora em hora (08:00–20:00)
+ * - Envio para WhatsApp incluindo dia/hora e aviso de cancelamento 24h
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -14,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
   initForm();
   initAOS();
   initPhoneMockup();
+
+  // Novidades
+  initSearchBar();
+  initScheduling(); // aplica se inputs já estiverem no DOM
 });
 
 /* ============ Preloader ============ */
@@ -147,18 +155,19 @@ function initModal() {
 function openServiceModal(preset) {
   const modal = document.getElementById('serviceModal');
   if (!modal) return;
-  if (preset) {
-    const serviceType = document.getElementById('serviceType');
-    if (serviceType) serviceType.value = preset;
-  }
-  modal.classList.add('show'); // <- alinhado ao CSS
+  const serviceType = document.getElementById('serviceType');
+  if (preset && serviceType) serviceType.value = preset;
+  modal.classList.add('show'); // alinhado ao CSS
   document.body.style.overflow = 'hidden';
+
+  // Garante que inputs de agenda estejam corretos ao abrir
+  initScheduling();
 }
 
 function closeServiceModal() {
   const modal = document.getElementById('serviceModal');
   if (!modal) return;
-  modal.classList.remove('show'); // <- alinhado ao CSS
+  modal.classList.remove('show'); // alinhado ao CSS
   document.body.style.overflow = '';
 }
 
@@ -166,7 +175,7 @@ function selectService(service) {
   openServiceModal(service);
 }
 
-/* ============ Form Handling ============ */
+/* ============ Form Handling (inclui agenda) ============ */
 function initForm() {
   const form = document.getElementById('serviceForm');
   if (!form) return;
@@ -176,21 +185,25 @@ function initForm() {
     const data = {
       service: document.getElementById('serviceType')?.value || '',
       urgency: (form.querySelector('input[name="urgency"]:checked') || {}).value || '',
+      date: document.getElementById('scheduleDate')?.value || '',
+      time: document.getElementById('scheduleTime')?.value || '',
       description: document.getElementById('description')?.value?.trim() || '',
       name: document.getElementById('name')?.value?.trim() || '',
       phone: document.getElementById('phone')?.value?.trim() || '',
       address: document.getElementById('address')?.value?.trim() || ''
     };
 
-    // Envia direto para WhatsApp
+    // Texto para WhatsApp com política 24h
     const txt = encodeURIComponent(
       `Hola! Quiero solicitar un servicio:\n` +
       `• Tipo: ${data.service}\n` +
       `• Urgencia: ${data.urgency}\n` +
+      (data.date || data.time ? `• Día/Hora: ${data.date} ${data.time}\n` : '') +
       `• Descripción: ${data.description}\n` +
       `• Nombre: ${data.name}\n` +
       `• Teléfono: ${data.phone}\n` +
-      `• Dirección: ${data.address}`
+      `• Dirección: ${data.address}\n` +
+      `Nota: Acepto la política de cancelación sin costo hasta 24h antes.`
     );
     window.open(`https://wa.me/543804123456?text=${txt}`, '_blank');
     closeServiceModal();
@@ -221,7 +234,7 @@ function initPhoneMockup() {
   });
 }
 
-/* ============ Nice-to-have (não quebra se não usado) ============ */
+/* ============ Seções ativas no menu (opcional) ============ */
 (function () {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
@@ -257,8 +270,6 @@ function initPhoneMockup() {
 })();
 
 /* ============ Service Worker (opcional) ============ */
-// Em GitHub Pages, evite caminhos absolutos.
-// Se não tiver um sw.js de propósito, pode remover este bloco.
 if ('serviceWorker' in navigator) {
   try {
     navigator.serviceWorker.register('./sw.js').catch(() => { /* ignora */ });
@@ -281,6 +292,63 @@ function throttle(func, limit) {
       setTimeout(() => (inThrottle = false), limit);
     }
   };
+}
+
+/* ============ NOVO: Busca de serviços no hero ============ */
+function initSearchBar(){
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('searchInput');
+  const grid  = document.getElementById('servicesGrid');
+  if(!form || !input || !grid) return;
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const q = input.value.trim().toLowerCase();
+    const cards = grid.querySelectorAll('.service-card');
+    let any = false;
+
+    cards.forEach(c=>{
+      const tags = (c.getAttribute('data-tags')||'').toLowerCase();
+      const title = (c.querySelector('h3')?.textContent||'').toLowerCase();
+      const match = !q || tags.includes(q) || title.includes(q);
+      c.style.display = match ? '' : 'none';
+      c.classList.toggle('is-dim', q && !match);
+      if(match) any = true;
+    });
+
+    // rola até a lista
+    document.getElementById('servicios')?.scrollIntoView({behavior:'smooth', block:'start'});
+
+    // Se nada for encontrado, restaura após alguns segundos
+    if(!any){
+      setTimeout(()=>cards.forEach(c=>{
+        c.style.display=''; c.classList.remove('is-dim');
+      }), 2400);
+    }
+  });
+}
+
+/* ============ NOVO: Agenda (D+1 e horários por hora) ============ */
+function initScheduling(){
+  const dateInput = document.getElementById('scheduleDate');
+  const timeSelect = document.getElementById('scheduleTime');
+  if(!dateInput || !timeSelect) return;
+
+  // Data mínima = amanhã (24h à frente)
+  const now = new Date();
+  const dPlus1 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const toYMD = (d)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  dateInput.min = toYMD(dPlus1);
+  if(!dateInput.value || dateInput.value < dateInput.min) dateInput.value = dateInput.min;
+
+  // Gera horários 08:00–20:00 de hora em hora
+  timeSelect.innerHTML = '';
+  for(let h=8; h<=20; h++){
+    const label = `${String(h).padStart(2,'0')}:00`;
+    const opt = document.createElement('option');
+    opt.value = label; opt.textContent = label;
+    timeSelect.appendChild(opt);
+  }
 }
 
 /* Export global (caso precise no HTML) */
