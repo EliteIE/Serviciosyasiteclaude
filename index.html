@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>Servicios Ya | Multiservicios en La Rioja</title>
-  <meta name="description" content="Contratá profesionales de confianza en La Rioja: plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería. Atención rápida por WhatsApp." />
+  <meta name="description" content="Contratá profesionales de confianza en La Rioja: plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería. Reservá online de forma rápida y segura." />
 
   <!-- Estilos -->
-  <link rel="preload" href="./css/styles.css?v=1.2.0" as="style" />
-  <link rel="stylesheet" href="./css/styles.css?v=1.2.0" />
+  <link rel="preload" href="./css/styles.css?v=1.3.0" as="style" />
+  <link rel="stylesheet" href="./css/styles.css?v=1.3.0" />
 
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
@@ -43,7 +43,8 @@
   <section class="hero hero--modern" data-aos="fade-up">
     <div class="container hero-inner">
       <div class="hero-copy">
-        <span class="badge">★ +2,000 servicios completados</span>
+        <!-- badge removido a pedido -->
+
         <h1>
           Conectamos tu hogar<br>
           con los mejores <span class="accent">profesionales</span><br>
@@ -60,15 +61,19 @@
           <button class="btn-primary search-btn" type="submit">Buscar</button>
         </form>
 
+        <!-- mantemos só a métrica de verificados -->
         <div class="metrics-row">
-          <span class="metric"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.96 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/></svg> +500 profesionales</span>
-          <span class="metric"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.58L19 9z"/></svg> 100% verificados</span>
+          <span class="metric">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.58L19 9z"/>
+            </svg>
+            100% verificados
+          </span>
         </div>
       </div>
+
       <div class="hero-media" aria-hidden="true">
-        <div class="hero-photo">
-          <!-- substitua por ./images/hero.webp se desejar -->
-        </div>
+        <div class="hero-photo"><!-- ./images/hero.webp --></div>
         <div class="hero-rating card">
           <div class="stars">★★★★★</div>
           <div class="rating-text">
@@ -265,7 +270,7 @@
           <div class="notice">Cancelación sin costo hasta <strong>24h</strong> antes del horario reservado.</div>
         </aside>
 
-        <!-- Formulario -->
+        <!-- Formulario guiado -->
         <div class="modal-form">
           <form id="serviceForm" novalidate>
             <div class="form-group">
@@ -281,53 +286,54 @@
               </select>
             </div>
 
-            <div class="form-group">
-              <label>¿Cuándo lo necesitás?</label>
-              <div class="radio-group">
-                <label class="radio-option">
-                  <input type="radio" name="urgency" value="ahora" />
-                  <span>Lo antes posible</span>
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="urgency" value="programar" checked />
-                  <span>Programar</span>
-                </label>
-              </div>
-            </div>
+            <!-- radios de urgencia removidos a pedido -->
 
             <div class="form-row">
-              <div class="form-group">
+              <div class="form-group is-disabled">
                 <label for="scheduleDate">Día (desde mañana)</label>
-                <input type="date" id="scheduleDate" required>
+                <input type="date" id="scheduleDate" required disabled>
               </div>
-              <div class="form-group">
+              <div class="form-group is-disabled">
                 <label for="scheduleTime">Horario</label>
-                <select id="scheduleTime" required></select>
+                <select id="scheduleTime" required disabled></select>
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group is-disabled">
               <label for="description">Descripción del trabajo</label>
-              <textarea id="description" rows="3" placeholder="Ej: Pérdida de agua en el baño..."></textarea>
+              <textarea id="description" rows="3" placeholder="Ej: Pérdida de agua en el baño..." disabled></textarea>
+              <small class="hint">Sé breve y claro.</small>
             </div>
 
             <div class="form-row">
-              <div class="form-group">
+              <div class="form-group is-disabled">
                 <label for="name">Tu Nombre</label>
-                <input type="text" id="name" required />
+                <input type="text" id="name" required disabled />
               </div>
-              <div class="form-group">
+              <div class="form-group is-disabled">
                 <label for="phone">Teléfono</label>
-                <input type="tel" id="phone" required />
+                <input type="tel" id="phone" required disabled />
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="address">Dirección</label>
-              <input type="text" id="address" placeholder="Calle y número, La Rioja" required />
+            <div class="form-row grid-3">
+              <div class="form-group is-disabled">
+                <label for="barrio">Barrio</label>
+                <input type="text" id="barrio" required disabled />
+              </div>
+              <div class="form-group is-disabled">
+                <label for="calle">Calle</label>
+                <input type="text" id="calle" required disabled />
+              </div>
+              <div class="form-group is-disabled">
+                <label for="numero">Número</label>
+                <input type="text" id="numero" inputmode="numeric" required disabled />
+              </div>
             </div>
 
-            <button type="submit" class="btn-primary btn-block">Confirmar y Enviar por WhatsApp</button>
+            <button type="submit" class="btn-primary btn-block" id="submitBtn" disabled>
+              Solicitar servicio ya
+            </button>
           </form>
         </div>
       </div>
@@ -343,6 +349,6 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.2.0"></script>
+  <script defer src="./js/main.js?v=1.3.0"></script>
 </body>
 </html>
