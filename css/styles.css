@@ -1,3 +1,8 @@
+/* =========================
+   Servicios Ya - styles.css
+   v1.2.0
+   ========================= */
+
 /* ==== Reset & tokens ==== */
 :root{
   --primary:#0D47A1;      /* azul marca */
@@ -20,6 +25,7 @@ img,svg{max-width:100%;height:auto;display:block}
 a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
 .container{width:min(1200px,92%);margin-inline:auto}
+.accent{color:var(--accent)}
 
 /* ==== Buttons ==== */
 .btn-primary,.btn-secondary,.link{
@@ -35,7 +41,8 @@ a:hover{text-decoration:underline}
 .link:hover{background:#f8fafc}
 
 /* ==== Header ==== */
-.site-header{position:sticky;top:0;background:#fff;border-bottom:1px solid #EEF2F7;z-index:50}
+.site-header{position:sticky;top:0;background:#fff;border-bottom:1px solid #EEF2F7;z-index:50;transition:box-shadow .2s, transform .2s}
+.site-header.scrolled{box-shadow:0 6px 18px rgba(2,6,23,.06)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-weight:800;font-size:1.1rem}
 .logo .logo-mark{font-size:1.3rem}
@@ -44,7 +51,7 @@ a:hover{text-decoration:underline}
 .nav a:hover{opacity:1}
 .nav .btn-primary{margin-left:.5rem}
 
-/* ==== Hero ==== */
+/* ==== Hero (base) ==== */
 .hero{background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%)}
 .hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:56px 0}
 .hero-copy h1{margin:0 0 .6rem;font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-.02em}
@@ -53,6 +60,38 @@ a:hover{text-decoration:underline}
 .hero-placeholder{height:320px;border-radius:var(--radius);background:
   radial-gradient(1200px 300px at 120% -40%, rgba(13,71,161,.15), transparent 60%),
   linear-gradient(135deg,#dbeafe,#eff6ff); box-shadow:var(--shadow)}
+
+/* ==== Hero Modern (novo) ==== */
+.hero--modern{background:linear-gradient(135deg,#0D47A1 0%, #22c55e 100%); color:#fff}
+.hero--modern .hero-copy h1{color:#fff}
+.hero--modern .hero-copy p{color:#E7ECF5}
+.badge{
+  display:inline-block;background:#ffffff22;border:1px solid #ffffff40;color:#fff;
+  padding:.35rem .7rem;border-radius:9999px;font-weight:700;margin-bottom:.6rem
+}
+/* Barra de busca do hero */
+.search-bar{
+  display:flex;gap:.6rem;align-items:center;background:#ffffff18;border:1px solid #ffffff40;
+  border-radius:16px;padding:.4rem;margin:.6rem 0 .3rem
+}
+.search-input{display:flex;align-items:center;gap:.4rem;flex:1;background:#fff;border-radius:12px;padding:.55rem .7rem}
+.search-input input{border:0;outline:0;width:100%;color:var(--text);background:transparent}
+.search-input svg{width:20px;height:20px;opacity:.6;fill:currentColor;color:#64748b}
+.search-btn{min-width:108px}
+.metrics-row{display:flex;gap:1rem;margin-top:.7rem;flex-wrap:wrap}
+.metric{display:inline-flex;gap:.4rem;align-items:center;background:#ffffff22;border:1px solid #ffffff40;border-radius:9999px;padding:.35rem .7rem}
+.metric svg{width:18px;height:18px;fill:#fff;opacity:.9}
+
+/* Lado direito do hero */
+.hero-media{position:relative}
+.hero-photo{height:360px;border-radius:22px;background:linear-gradient(180deg,#c7d2fe,#9ae6b4);box-shadow:var(--shadow)}
+.card{border:1px solid #E5E7EB}
+.hero-rating.card,.hero-badge.card{
+  position:absolute;right:-10px;background:#fff;color:#111;padding:.7rem .9rem;border-radius:14px;box-shadow:var(--shadow)
+}
+.hero-rating{bottom:-18px;display:flex;gap:.6rem;align-items:center}
+.stars{letter-spacing:.2rem}
+.hero-badge{top:-18px}
 
 /* ==== Sections & titles ==== */
 .section{padding:56px 0}
@@ -66,6 +105,8 @@ a:hover{text-decoration:underline}
 }
 .service-card h3{margin:.2rem 0 .3rem;font-size:20px}
 .service-card p{margin:0 0 .8rem;color:var(--muted)}
+/* Atenuação quando filtrado (busca) */
+.service-card.is-dim{opacity:.35;filter:grayscale(.1)}
 
 /* ==== Pricing ==== */
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -74,6 +115,16 @@ a:hover{text-decoration:underline}
 .price{font-weight:800;font-size:28px;margin:.2rem 0 1rem;color:var(--primary)}
 .price-card ul{margin:0 0 1rem;padding-left:18px;color:var(--muted)}
 .price-card li{margin:.2rem 0}
+
+/* ==== Cómo Funciona (novo) ==== */
+.how .center{text-align:center}
+.how-subtitle{text-align:center;color:var(--muted);margin:-6px 0 18px}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.how-step{background:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow);border:1px solid #E5E7EB}
+.step-number{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:#E6F0FF;color:var(--primary);font-weight:800;margin-bottom:.4rem
+}
 
 /* ==== CTA ==== */
 .cta{background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);border-block:1px solid #EEF2F7}
@@ -95,12 +146,13 @@ a:hover{text-decoration:underline}
 .footer-column li{display:flex;align-items:center;gap:.5rem;margin:.35rem 0}
 .footer-bottom{border-top:1px solid #1F2A44;padding:14px 0;color:#94A3B8;font-size:.95rem}
 
-/* ==== Modal ==== */
+/* ==== Modal (base) ==== */
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.55);z-index:1000}
 .modal.show{display:flex}
-.modal-content{width:min(560px,92%);background:#fff;border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+/* Largura maior para layout 2 colunas */
+.modal-content{width:min(920px,92%);background:#fff;border-radius:20px;padding:20px;box-shadow:var(--shadow);position:relative}
 .modal-close{position:absolute;right:14px;top:10px;background:#fff;border:1px solid #E5E7EB;width:36px;height:36px;border-radius:50%;
-  cursor:pointer}
+  cursor:pointer;display:grid;place-items:center}
 .form-group{display:flex;flex-direction:column;gap:.35rem;margin:.6rem 0}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 label{font-weight:600}
@@ -110,17 +162,31 @@ input,select,textarea{
 textarea{resize:vertical}
 .btn-block{width:100%;margin-top:.4rem}
 
+/* ==== Modal 2 colunas (novo) ==== */
+.modal-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:16px}
+.modal-info{background:var(--surface);border:1px solid #E5E7EB;border-radius:16px;padding:16px}
+.checklist{margin:.4rem 0 1rem;padding-left:1.1rem;color:#374151}
+.checklist li{margin:.25rem 0}
+.notice{font-size:.95rem;color:#6B7280;background:#fff;border:1px dashed #CBD5E1;padding:.6rem;border-radius:10px}
+.modal-form .form-row{grid-template-columns:1fr 1fr}
+
 /* ==== WhatsApp button ==== */
 .whatsapp-btn{position:fixed;right:16px;bottom:16px;display:inline-flex;align-items:center;justify-content:center;
   width:58px;height:58px;border-radius:50%;background:#25D366;box-shadow:0 10px 24px rgba(37,211,102,.35);z-index:999}
 
 /* ==== Responsive ==== */
+@media (max-width: 1100px){
+  .hero-rating.card,.hero-badge.card{right:0}
+}
 @media (max-width: 960px){
   .hero-inner{grid-template-columns:1fr}
   .services-grid,.pricing-grid{grid-template-columns:repeat(2,1fr)}
   .footer-top{grid-template-columns:1fr}
+  .modal-grid{grid-template-columns:1fr}
 }
 @media (max-width: 640px){
   .services-grid,.pricing-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
+  .search-bar{flex-direction:column;align-items:stretch}
+  .search-btn{width:100%}
 }
