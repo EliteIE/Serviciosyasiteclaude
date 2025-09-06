@@ -1,10 +1,10 @@
 /**
  * Servicios Ya - JavaScript Principal (GitHub Pages safe)
- * v1.2.0
+ * v1.3.0
  * - Busca de serviços no hero (filtra e rola para a seção)
- * - Modal de agendamento com data mínima = amanhã (24h à frente)
- * - Horários de hora em hora (08:00–20:00)
- * - Envio para WhatsApp incluindo dia/hora e aviso de cancelamento 24h
+ * - Modal guiado: cada passo libera o próximo
+ * - Data mínima = amanhã (24h à frente) + horários 08:00–20:00 (de hora em hora)
+ * - Envio por e-mail: contacto@serviciosyalr.com (assunto + corpo organizados)
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function () {
   initServiceCards();
   initPricingToggle();
   initModal();
-  initForm();
+  initForm();           // inclui fluxo guiado
   initAOS();
   initPhoneMockup();
 
   // Novidades
   initSearchBar();
-  initScheduling(); // aplica se inputs já estiverem no DOM
+  initScheduling();     // aplica min/horários mesmo se inputs estiverem desabilitados
 });
 
 /* ============ Preloader ============ */
@@ -115,7 +115,7 @@ function initServiceCards() {
   });
 }
 
-/* ============ Pricing Toggle ============ */
+/* ============ Pricing Toggle (se existir) ============ */
 function initPricingToggle() {
   const toggle = document.getElementById('pricingToggle');
   if (!toggle) return;
@@ -155,19 +155,26 @@ function initModal() {
 function openServiceModal(preset) {
   const modal = document.getElementById('serviceModal');
   if (!modal) return;
+
+  // reset básico para manter o fluxo guiado sempre limpo
+  const form = document.getElementById('serviceForm');
+  if (form) {
+    form.reset();
+    prepareGuidedState(); // recoloca desabilitados
+  }
+
   const serviceType = document.getElementById('serviceType');
   if (preset && serviceType) serviceType.value = preset;
-  modal.classList.add('show'); // alinhado ao CSS
-  document.body.style.overflow = 'hidden';
 
-  // Garante que inputs de agenda estejam corretos ao abrir
-  initScheduling();
+  initScheduling(); // garante min de data e horários
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeServiceModal() {
   const modal = document.getElementById('serviceModal');
   if (!modal) return;
-  modal.classList.remove('show'); // alinhado ao CSS
+  modal.classList.remove('show');
   document.body.style.overflow = '';
 }
 
@@ -175,40 +182,115 @@ function selectService(service) {
   openServiceModal(service);
 }
 
-/* ============ Form Handling (inclui agenda) ============ */
+/* ============ Form Handling + Fluxo Guiado ============ */
 function initForm() {
   const form = document.getElementById('serviceForm');
   if (!form) return;
 
+  // prepara estado inicial (tudo desabilitado menos "tipo de serviço")
+  prepareGuidedState();
+  wireGuidedFlow();
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
     const data = {
-      service: document.getElementById('serviceType')?.value || '',
-      urgency: (form.querySelector('input[name="urgency"]:checked') || {}).value || '',
-      date: document.getElementById('scheduleDate')?.value || '',
-      time: document.getElementById('scheduleTime')?.value || '',
-      description: document.getElementById('description')?.value?.trim() || '',
-      name: document.getElementById('name')?.value?.trim() || '',
-      phone: document.getElementById('phone')?.value?.trim() || '',
-      address: document.getElementById('address')?.value?.trim() || ''
+      service: val('serviceType'),
+      date: val('scheduleDate'),
+      time: val('scheduleTime'),
+      description: val('description').trim(),
+      name: val('name').trim(),
+      phone: val('phone').trim(),
+      barrio: val('barrio').trim(),
+      calle:  val('calle').trim(),
+      numero: val('numero').trim()
     };
 
-    // Texto para WhatsApp com política 24h
-    const txt = encodeURIComponent(
-      `Hola! Quiero solicitar un servicio:\n` +
-      `• Tipo: ${data.service}\n` +
-      `• Urgencia: ${data.urgency}\n` +
-      (data.date || data.time ? `• Día/Hora: ${data.date} ${data.time}\n` : '') +
-      `• Descripción: ${data.description}\n` +
-      `• Nombre: ${data.name}\n` +
-      `• Teléfono: ${data.phone}\n` +
-      `• Dirección: ${data.address}\n` +
-      `Nota: Acepto la política de cancelación sin costo hasta 24h antes.`
-    );
-    window.open(`https://wa.me/543804123456?text=${txt}`, '_blank');
+    // Monta e abre e-mail (mailto) — funciona bem no GitHub Pages
+    const subject = `[Solicitud] ${data.service} - ${formatDMY(data.date)} ${data.time}`;
+    const bodyLines = [
+      `Tipo de servicio: ${data.service}`,
+      `Día: ${formatDMY(data.date)}`,
+      `Horario: ${data.time}`,
+      `Descripción: ${data.description || '-'}`,
+      `Nombre: ${data.name}`,
+      `Teléfono: ${data.phone}`,
+      `Dirección: Barrio ${data.barrio}, Calle ${data.calle}, N° ${data.numero}, La Rioja`,
+      ``,
+      `Política: Cancelación sin costo hasta 24h antes del horario reservado.`
+    ];
+    const mailto = `mailto:contacto@serviciosyalr.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+    window.location.href = mailto;
+
     closeServiceModal();
-    form.reset();
   });
+}
+
+/* Helpers do form guiado */
+function prepareGuidedState() {
+  const controls = [
+    'scheduleDate','scheduleTime','description',
+    'name','phone','barrio','calle','numero','submitBtn'
+  ];
+  controls.forEach(id => disableCtl(id, true));
+}
+
+function wireGuidedFlow() {
+  const serviceType  = el('serviceType');
+  const scheduleDate = el('scheduleDate');
+  const scheduleTime = el('scheduleTime');
+  const description  = el('description');
+  const name         = el('name');
+  const phone        = el('phone');
+  const barrio       = el('barrio');
+  const calle        = el('calle');
+  const numero       = el('numero');
+  const submitBtn    = el('submitBtn');
+
+  if (!serviceType) return;
+
+  serviceType.addEventListener('change', () => {
+    const ok = !!serviceType.value;
+    disableCtl('scheduleDate', !ok);
+    disableCtl('scheduleTime', !ok);
+    if (ok) initScheduling();
+  });
+
+  scheduleDate?.addEventListener('change', () => {
+    const ok = !!scheduleDate.value;
+    disableCtl('scheduleTime', !ok);
+  });
+
+  scheduleTime?.addEventListener('change', () => {
+    const ok = !!scheduleTime.value;
+    disableCtl('description', !ok);
+  });
+
+  description?.addEventListener('input', () => {
+    const ok = (description.value || '').trim().length >= 6;
+    disableCtl('name', !ok);
+    disableCtl('phone', !ok);
+  });
+
+  const namePhoneCheck = () => {
+    const ok = (name.value.trim().length >= 2) && validPhone(phone.value);
+    disableCtl('barrio', !ok);
+    disableCtl('calle',  !ok);
+    disableCtl('numero', !ok);
+  };
+  name?.addEventListener('input', namePhoneCheck);
+  phone?.addEventListener('input', namePhoneCheck);
+
+  const addressCheck = () => {
+    const ok =
+      barrio.value.trim().length >= 2 &&
+      calle.value.trim().length  >= 2 &&
+      /^[0-9]{1,6}$/.test((numero.value || '').trim());
+    disableCtl('submitBtn', !ok);
+  };
+  barrio?.addEventListener('input', addressCheck);
+  calle?.addEventListener('input', addressCheck);
+  numero?.addEventListener('input', addressCheck);
 }
 
 /* ============ AOS ============ */
@@ -218,7 +300,7 @@ function initAOS() {
   }
 }
 
-/* ============ Phone Mockup ============ */
+/* ============ Phone Mockup (se existir) ============ */
 function initPhoneMockup() {
   const phoneScreen = document.querySelector('.phone-screen');
   if (!phoneScreen) return;
@@ -276,7 +358,7 @@ if ('serviceWorker' in navigator) {
   } catch (e) { /* ignora */ }
 }
 
-/* ============ Utils ============ */
+/* ============ Utils genéricas ============ */
 function debounce(func, wait) {
   let timeout; return function (...args) {
     clearTimeout(timeout);
@@ -294,7 +376,7 @@ function throttle(func, limit) {
   };
 }
 
-/* ============ NOVO: Busca de serviços no hero ============ */
+/* ============ Busca de serviços no hero ============ */
 function initSearchBar(){
   const form = document.getElementById('searchForm');
   const input = document.getElementById('searchInput');
@@ -308,7 +390,7 @@ function initSearchBar(){
     let any = false;
 
     cards.forEach(c=>{
-      const tags = (c.getAttribute('data-tags')||'').toLowerCase();
+      const tags  = (c.getAttribute('data-tags')||'').toLowerCase();
       const title = (c.querySelector('h3')?.textContent||'').toLowerCase();
       const match = !q || tags.includes(q) || title.includes(q);
       c.style.display = match ? '' : 'none';
@@ -316,10 +398,8 @@ function initSearchBar(){
       if(match) any = true;
     });
 
-    // rola até a lista
     document.getElementById('servicios')?.scrollIntoView({behavior:'smooth', block:'start'});
 
-    // Se nada for encontrado, restaura após alguns segundos
     if(!any){
       setTimeout(()=>cards.forEach(c=>{
         c.style.display=''; c.classList.remove('is-dim');
@@ -328,7 +408,7 @@ function initSearchBar(){
   });
 }
 
-/* ============ NOVO: Agenda (D+1 e horários por hora) ============ */
+/* ============ Agenda (D+1 e horários por hora) ============ */
 function initScheduling(){
   const dateInput = document.getElementById('scheduleDate');
   const timeSelect = document.getElementById('scheduleTime');
@@ -341,7 +421,7 @@ function initScheduling(){
   dateInput.min = toYMD(dPlus1);
   if(!dateInput.value || dateInput.value < dateInput.min) dateInput.value = dateInput.min;
 
-  // Gera horários 08:00–20:00 de hora em hora
+  // Gera horários 08:00–20:00 (hora em hora)
   timeSelect.innerHTML = '';
   for(let h=8; h<=20; h++){
     const label = `${String(h).padStart(2,'0')}:00`;
@@ -349,6 +429,25 @@ function initScheduling(){
     opt.value = label; opt.textContent = label;
     timeSelect.appendChild(opt);
   }
+}
+
+/* ============ Pequenos utilitários de DOM/validação ============ */
+function el(id){ return document.getElementById(id); }
+function val(id){ return (el(id)?.value ?? ''); }
+function disableCtl(id, disable){
+  const ctl = el(id);
+  if(!ctl) return;
+  ctl.disabled = !!disable;
+  ctl.closest('.form-group')?.classList.toggle('is-disabled', !!disable);
+}
+function validPhone(p){
+  const digits = (p || '').replace(/\D/g,'');
+  return digits.length >= 8 && digits.length <= 15;
+}
+function formatDMY(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
 }
 
 /* Export global (caso precise no HTML) */
