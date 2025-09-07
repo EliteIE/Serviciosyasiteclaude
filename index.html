@@ -11,15 +11,18 @@
   <link rel="preload" href="./css/styles.css?v=1.4.2" as="style" />
   <link rel="stylesheet" href="./css/styles.css?v=1.4.2" />
 
+  <!-- Preload da logo para evitar atraso de render -->
+  <link rel="preload" href="./images/logo-serviciosya.png" as="image" imagesizes="32px" />
+
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
-  <!-- Fallback mínimo para ícones se o CSS não carregar -->
+  <!-- Fallback mínimo -->
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
-    /* garante que a imagem de logo não quebre o layout se o SVG demorar a carregar */
-    .logo-img{width:28px;height:28px;display:block}
+    /* Garante que a logo não quebre layout caso a imagem demore */
+    .logo-img{height:28px;width:auto;display:block}
   </style>
 </head>
 
@@ -28,8 +31,12 @@
   <header id="header" class="site-header">
     <div class="container header-inner">
       <a class="logo" href="#inicio" aria-label="Servicios Ya">
-        <!-- Logo SVG do repositório -->
-        <img src="./images/logo-serviciosya.svg" alt="Logo Servicios Ya" class="logo-img" width="28" height="28" />
+        <!-- Logo PNG -->
+        <img class="logo-img"
+             src="./images/logo-serviciosya.png"
+             alt="Servicios Ya"
+             width="32" height="32"
+             loading="eager" decoding="async" fetchpriority="high" />
         <span class="logo-text">Servicios <strong>Ya</strong></span>
       </a>
 
@@ -79,11 +86,9 @@
       </div>
 
       <div class="hero-media" aria-hidden="true">
-        <!-- Usa a imagem do herói do diretório /images.
-             Substitua o arquivo ./images/hero.webp pelo visual que você enviou (4 quadrantes). -->
+        <!-- Atualize ./images/hero.webp com a imagem 4 quadrantes que você enviou -->
         <div class="hero-photo" style="background-image:url('./images/hero.webp'); background-size:cover; background-position:center;"></div>
-
-        <!-- Removidos: badge “Carlos M.” e a nota 4.9/5 -->
+        <!-- Removidos: badge “Carlos M.” e nota 4.9/5 -->
       </div>
     </div>
   </section>
@@ -175,7 +180,11 @@
       <div class="footer-top">
         <div class="brand">
           <div class="logo-row">
-            <img src="./images/logo-serviciosya.svg" alt="Logo Servicios Ya" class="logo-img" width="28" height="28" />
+            <img class="logo-img"
+                 src="./images/logo-serviciosya.png"
+                 alt="Servicios Ya"
+                 width="32" height="32"
+                 loading="lazy" decoding="async" />
             <span class="logo-text">Servicios <strong>Ya</strong></span>
           </div>
           <p>Plataforma de multiservicios de confianza en La Rioja.</p>
