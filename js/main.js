@@ -1,13 +1,12 @@
 /**
- * Servicios Ya - JavaScript Principal (GitHub Pages safe)
- * v1.5.0
+ * Servicios Ya - JavaScript Principal
+ * v1.4.1
  * - Busca no hero
  * - Modal com fluxo guiado (stepper) e validações
- * - Data mínima D+1 e horários de hora em hora (08–20h)
+ * - Data mínima D+1 e horários (08–20h)
  * - Envio por WhatsApp (testes) -> +54 380 426 4962
  */
-
-const WA_NUMBER = "543804264962"; // +54 380 426 4962 (formato wa.me)
+const WA_NUMBER = "543804264962"; // +54 380 426 4962
 
 document.addEventListener("DOMContentLoaded", () => {
   initPreloader();
@@ -24,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Novidades
   initSearchBar();
   initScheduling();
-  initStepper(); // fluxo guiado
+  initStepper(true); // garante estado inicial
 });
 
 /* ============ Preloader ============ */
@@ -60,14 +59,14 @@ function initMobileMenu() {
   if (!mobileToggle || !navMenu) return;
 
   mobileToggle.addEventListener("click", function () {
-    this.classList.toggle("active");
-    navMenu.classList.toggle("active");
+    const active = navMenu.classList.toggle("active");
+    this.setAttribute("aria-expanded", active ? "true" : "false");
   });
 
   navMenu.querySelectorAll(".nav-link").forEach((link) => {
     link.addEventListener("click", () => {
-      mobileToggle.classList.remove("active");
       navMenu.classList.remove("active");
+      mobileToggle.setAttribute("aria-expanded", "false");
     });
   });
 }
@@ -91,26 +90,17 @@ function initSmoothScroll() {
   });
 }
 
-/* ============ Service Cards Animation ============ */
+/* ============ Service Cards Animation (leve) ============ */
 function initServiceCards() {
   const cards = document.querySelectorAll(".mini-card, .service-card");
   if (!cards.length) return;
   let currentIndex = 0;
-
   function rotateCards() {
     cards.forEach((c) => c.classList.remove("active"));
     cards[currentIndex]?.classList.add("active");
     currentIndex = (currentIndex + 1) % cards.length;
   }
-  setInterval(rotateCards, 2000);
-
-  cards.forEach((card, index) => {
-    card.addEventListener("click", function () {
-      cards.forEach((c) => c.classList.remove("active"));
-      this.classList.add("active");
-      currentIndex = index;
-    });
-  });
+  setInterval(rotateCards, 2400);
 }
 
 /* ============ Pricing Toggle (se existir) ============ */
@@ -150,18 +140,14 @@ function openServiceModal(preset) {
   modal.classList.add("show");
   document.body.style.overflow = "hidden";
 
-  // 1) garantir inputs (D+1/hora) e listeners do stepper
-  initScheduling();
-  initStepper(true);
-
-  // 2) setar o serviço (se veio da grade) e disparar change APÓS listeners existirem
   const serviceType = document.getElementById("serviceType");
   if (preset && serviceType) {
     serviceType.value = preset;
     serviceType.dispatchEvent(new Event("change", { bubbles: true }));
-    // foco direto na data para agilizar
-    setTimeout(() => document.getElementById("scheduleDate")?.focus(), 60);
   }
+
+  initScheduling();
+  initStepper(true);
 }
 
 function closeServiceModal() {
@@ -175,14 +161,13 @@ function selectService(service) {
   openServiceModal(service);
 }
 
-/* ============ Form Handling (envio por WhatsApp no teste) ============ */
+/* ============ Form (WhatsApp para testes) ============ */
 function initForm() {
   const form = document.getElementById("serviceForm");
   if (!form) return;
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-
     const f = getFields();
     const payload = {
       service: f.service.value,
@@ -198,27 +183,29 @@ function initForm() {
 
     const txt = encodeURIComponent(
       `Hola! Quiero solicitar un servicio:\n` +
-        `• Tipo: ${payload.service}\n` +
-        `• Día/Hora: ${formatDMY(payload.date)} ${payload.time}\n` +
-        `• Descripción: ${payload.description || "-"}\n` +
-        `• Nombre: ${payload.name}\n` +
-        `• Teléfono: ${payload.phone}\n` +
-        `• Dirección: Barrio ${payload.barrio}, Calle ${payload.calle}, Nº ${payload.numero}, La Rioja\n` +
-        `Nota: Cancelación sin costo hasta 24h antes del horario reservado.`
+      `• Tipo: ${payload.service}\n` +
+      `• Día/Hora: ${formatDMY(payload.date)} ${payload.time}\n` +
+      `• Descripción: ${payload.description || "-"}\n` +
+      `• Nombre: ${payload.name}\n` +
+      `• Teléfono: ${payload.phone}\n` +
+      `• Dirección: Barrio ${payload.barrio}, Calle ${payload.calle}, Nº ${payload.numero}, La Rioja\n` +
+      `Nota: Cancelación sin costo hasta 24h antes del horario reservado.`
     );
     window.open(`https://wa.me/${WA_NUMBER}?text=${txt}`, "_blank");
-
     closeServiceModal();
     form.reset();
-    initScheduling();
     initStepper(true);
   });
 }
 
 /* ============ AOS ============ */
 function initAOS() {
-  if (typeof AOS !== "undefined") {
-    AOS.init({ duration: 800, easing: "ease-in-out", once: true, offset: 100 });
+  try {
+    if (typeof AOS !== "undefined") {
+      AOS.init({ duration: 800, easing: "ease-in-out", once: true, offset: 100 });
+    }
+  } catch (_) {
+    /* se falhar, conteúdo já está visível graças ao CSS de fallback */
   }
 }
 
@@ -228,12 +215,9 @@ function initPhoneMockup() {
   if (!phoneScreen) return;
   phoneScreen.addEventListener("mousemove", function (e) {
     const r = this.getBoundingClientRect();
-    const x = e.clientX - r.left,
-      y = e.clientY - r.top;
-    const cx = r.width / 2,
-      cy = r.height / 2;
-    const rx = (y - cy) / 20,
-      ry = (cx - x) / 20;
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const cx = r.width / 2, cy = r.height / 2;
+    const rx = (y - cy) / 20, ry = (cx - x) / 20;
     this.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`;
   });
   phoneScreen.addEventListener("mouseleave", function () {
@@ -279,33 +263,13 @@ function initPhoneMockup() {
 
 /* ============ Service Worker (opcional) ============ */
 if ("serviceWorker" in navigator) {
-  try {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-  } catch (e) {}
+  try { navigator.serviceWorker.register("./sw.js").catch(() => {}); } catch (e) {}
 }
 
 /* ============ Utils ============ */
-function debounce(fn, wait) {
-  let t;
-  return function (...args) {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(this, args), wait);
-  };
-}
-function throttle(fn, limit) {
-  let ok = true;
-  return function () {
-    if (!ok) return;
-    fn.apply(this, arguments);
-    ok = false;
-    setTimeout(() => (ok = true), limit);
-  };
-}
-function formatDMY(ymd) {
-  if (!ymd) return "";
-  const [y, m, d] = ymd.split("-");
-  return `${d}/${m}/${y}`;
-}
+function debounce(fn, wait){ let t; return function(...args){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args),wait); }; }
+function throttle(fn, limit){ let ok=true; return function(){ if(!ok) return; fn.apply(this,arguments); ok=false; setTimeout(()=>ok=true,limit); }; }
+function formatDMY(ymd){ if(!ymd) return ""; const [y,m,d]=ymd.split("-"); return `${d}/${m}/${y}`; }
 
 /* ============ Busca no hero ============ */
 function initSearchBar() {
@@ -337,7 +301,7 @@ function initSearchBar() {
   });
 }
 
-/* ============ Agenda (D+1 e horários por hora) ============ */
+/* ============ Agenda (D+1 e horários) ============ */
 function initScheduling() {
   const dateInput = document.getElementById("scheduleDate");
   const timeSelect = document.getElementById("scheduleTime");
@@ -345,8 +309,7 @@ function initScheduling() {
 
   const now = new Date();
   const dPlus1 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  const toYMD = (d) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const toYMD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   dateInput.min = toYMD(dPlus1);
   if (!dateInput.value || dateInput.value < dateInput.min) dateInput.value = dateInput.min;
 
@@ -354,8 +317,7 @@ function initScheduling() {
   for (let h = 8; h <= 20; h++) {
     const label = `${String(h).padStart(2, "0")}:00`;
     const opt = document.createElement("option");
-    opt.value = label;
-    opt.textContent = label;
+    opt.value = label; opt.textContent = label;
     timeSelect.appendChild(opt);
   }
 }
@@ -381,79 +343,43 @@ function initStepper(forceRevalidate = false) {
   if (!f.service || !f.submit) return;
 
   const groups = {
-    step2: [f.date, f.time], // agenda
-    step3: [f.description],  // detalhe
-    step4: [f.name, f.phone, f.barrio, f.calle, f.numero], // contato/endereço
+    step2: [f.date, f.time],
+    step3: [f.description],
+    step4: [f.name, f.phone, f.barrio, f.calle, f.numero],
   };
 
   function setEnabled(els, enable) {
-    // aplica em microtask para evitar "estado travado" em alguns mobiles
-    setTimeout(() => {
-      els.forEach((el) => {
-        if (!el) return;
-        el.disabled = !enable;
-        el.closest(".form-group")?.classList.toggle("is-disabled", !enable);
-      });
-    }, 0);
+    els.forEach((el) => {
+      if (!el) return;
+      el.disabled = !enable;
+      el.closest(".form-group")?.classList.toggle("is-disabled", !enable);
+    });
   }
 
-  function isValidService() {
-    return !!f.service.value;
-  }
-  function isValidDateTime() {
-    const okDate = f.date.value && (!f.date.min || f.date.value >= f.date.min);
-    const okTime = !!f.time.value;
-    return okDate && okTime;
-  }
-  function isValidPhone(v) {
-    return (v || "").replace(/\D/g, "").length >= 7;
-  }
-  function isValidAddress() {
-    return f.barrio.value.trim() && f.calle.value.trim() && f.numero.value.trim();
-  }
+  function isValidService(){ return !!f.service.value; }
+  function isValidDateTime(){ return f.date.value && f.date.value >= f.date.min && !!f.time.value; }
+  function isValidPhone(v){ return (v||"").replace(/\D/g,"").length >= 7; }
+  function isValidAddress(){ return f.barrio.value.trim() && f.calle.value.trim() && f.numero.value.trim(); }
 
   function update() {
-    // Step 1 -> Step 2
-    const sOk = isValidService();
-    setEnabled(groups.step2, sOk);
-
-    // Step 2 -> Step 3 e 4
-    const step2ok = sOk && isValidDateTime();
+    setEnabled(groups.step2, isValidService());
+    const step2ok = isValidService() && isValidDateTime();
     setEnabled(groups.step3, step2ok);
     setEnabled(groups.step4, step2ok);
 
-    // Botão final
-    const allOk =
-      sOk &&
-      step2ok &&
-      f.name.value.trim() &&
-      isValidPhone(f.phone.value) &&
-      isValidAddress();
+    const allOk = isValidService() && isValidDateTime() &&
+      f.name.value.trim() && isValidPhone(f.phone.value) && isValidAddress();
+
     f.submit.disabled = !allOk;
     f.submit.classList.toggle("is-disabled", !allOk);
   }
 
-  // UX: focos automáticos
-  f.service?.addEventListener("change", () => {
-    update();
-    if (isValidService()) setTimeout(() => f.date?.focus(), 60);
-  });
-  f.date?.addEventListener("change", () => {
-    update();
-    if (isValidDateTime()) setTimeout(() => f.description?.focus(), 60);
-  });
-  f.time?.addEventListener("change", update);
-  f.description?.addEventListener("input", debounce(update, 120));
-  f.name?.addEventListener("input", debounce(update, 120));
-  f.phone?.addEventListener("input", debounce(update, 120));
-  f.barrio?.addEventListener("input", debounce(update, 120));
-  f.calle?.addEventListener("input", debounce(update, 120));
-  f.numero?.addEventListener("input", debounce(update, 120));
+  [f.service, f.date, f.time, f.description, f.name, f.phone, f.barrio, f.calle, f.numero]
+    .filter(Boolean)
+    .forEach((el) => {
+      el.addEventListener("change", update);
+      el.addEventListener("input", debounce(update, 120));
+    });
 
-  // Estado inicial / revalidação
   update();
-  if (forceRevalidate) {
-    // força repaint em iOS para refletir enabled/disabled
-    requestAnimationFrame(update);
-  }
 }
