@@ -1,6 +1,6 @@
 /* =========================
    Servicios Ya - styles.css
-   v1.4.2
+   v1.5.0 (carousel + fixes)
    ========================= */
 
 /* ==== Reset & tokens ==== */
@@ -114,7 +114,7 @@ a:hover{text-decoration:underline}
 .section{padding:56px 0}
 .section-title{font-size:clamp(22px,3vw,32px);margin:0 0 20px}
 
-/* ==== Services grid ==== */
+/* ==== Services grid (fallback) ==== */
 .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .service-card{
   background:var(--surface);border:1px solid #E5E7EB;border-radius:18px;padding:18px 18px 16px;
@@ -123,6 +123,49 @@ a:hover{text-decoration:underline}
 .service-card h3{margin:.2rem 0 .3rem;font-size:20px}
 .service-card p{margin:0 0 .8rem;color:var(--muted)}
 .service-card.is-dim{opacity:.35;filter:grayscale(.1)}
+
+/* ==== Services Carousel (novo) ==== */
+.services-carousel{position:relative}
+.services-carousel .section-title{margin-bottom:12px}
+
+/* viewport/track */
+.sc-viewport{position:relative;overflow:hidden}
+.sc-track{display:flex;will-change:transform;touch-action:pan-y;user-select:none}
+
+/* fade edges para dar noção de scroll */
+.sc-viewport::before,.sc-viewport::after{
+  content:"";position:absolute;top:0;bottom:0;width:40px;pointer-events:none;z-index:1
+}
+.sc-viewport::before{left:0;background:linear-gradient(to right,rgba(255,255,255,1),rgba(255,255,255,0))}
+.sc-viewport::after{right:0;background:linear-gradient(to left,rgba(255,255,255,1),rgba(255,255,255,0))}
+
+/* slides */
+.sc-slide{list-style:none;padding:0 9px}
+.services-carousel .service-card{height:100%;min-height:160px}
+
+/* cartão com imagem de fundo opcional
+   use no HTML: <article class="service-card" data-bg style="--bg:url('./images/serviciosya-plomeria-1280.webp')"> ...  */
+.services-carousel .service-card[data-bg]{position:relative;overflow:hidden}
+.services-carousel .service-card[data-bg]::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(13,71,161,.08),rgba(249,115,22,.06)), var(--bg);
+  background-size:cover;background-position:center;
+  opacity:.18;transition:opacity .2s, transform .4s ease;filter:saturate(1.05) contrast(1.02)
+}
+.services-carousel .service-card:hover::before{opacity:.23;transform:scale(1.02)}
+
+/* navegação */
+.sc-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:9999px;border:1px solid #E5E7EB;
+  background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:var(--shadow);
+  z-index:5;opacity:0;visibility:hidden;transition:opacity .2s, transform .2s
+}
+.sc-prev{left:-6px}
+.sc-next{right:-6px}
+.sc-nav svg{width:20px;height:20px;color:#111827}
+.services-carousel:hover .sc-nav,
+.services-carousel:focus-within .sc-nav{opacity:1;visibility:visible}
 
 /* ==== Cómo Funciona ==== */
 .how .center{text-align:center}
@@ -191,7 +234,7 @@ textarea{resize:vertical}
 }
 @media (max-width: 960px){
   .hero-inner{grid-template-columns:1fr}
-  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .services-grid{grid-template-columns:repeat(2,1fr)} /* fallback */
   .footer-top{grid-template-columns:1fr}
   .modal-grid{grid-template-columns:1fr}
   /* menu mobile */
@@ -203,12 +246,19 @@ textarea{resize:vertical}
   }
   .nav.active{display:flex}
   .nav .btn-primary{width:100%;margin:4px 0 0}
+
+  /* carrossel: botões um pouco mais para dentro */
+  .sc-prev{left:4px}
+  .sc-next{right:4px}
 }
 @media (max-width: 640px){
-  .services-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr} /* fallback */
   .form-row{grid-template-columns:1fr}
   .how-grid{grid-template-columns:1fr}
   .search-bar{flex-direction:column;align-items:stretch}
   .search-btn{width:100%}
   .hero-photo{height:300px}
+
+  .sc-slide{padding:0 6px}
+  .sc-viewport::before,.sc-viewport::after{width:24px}
 }
