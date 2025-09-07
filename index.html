@@ -18,6 +18,8 @@
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
+    /* garante que a imagem de logo não quebre o layout se o SVG demorar a carregar */
+    .logo-img{width:28px;height:28px;display:block}
   </style>
 </head>
 
@@ -26,8 +28,8 @@
   <header id="header" class="site-header">
     <div class="container header-inner">
       <a class="logo" href="#inicio" aria-label="Servicios Ya">
-        <!-- usa sua logo svg; o ?v=1 evita cache antigo -->
-        <img class="logo-img" src="./images/logo-serviciosya.svg?v=1" alt="Logo Servicios Ya" width="28" height="28" />
+        <!-- Logo SVG do repositório -->
+        <img src="./images/logo-serviciosya.svg" alt="Logo Servicios Ya" class="logo-img" width="28" height="28" />
         <span class="logo-text">Servicios <strong>Ya</strong></span>
       </a>
 
@@ -77,15 +79,11 @@
       </div>
 
       <div class="hero-media" aria-hidden="true">
-        <div class="hero-photo"><!-- background via CSS: ./images/hero.webp --></div>
-        <div class="hero-rating card">
-          <div class="stars">★★★★★</div>
-          <div class="rating-text">
-            <strong>4.9/5</strong>
-            <span>Calificación promedio</span>
-          </div>
-        </div>
-        <!-- Badge removido -->
+        <!-- Usa a imagem do herói do diretório /images.
+             Substitua o arquivo ./images/hero.webp pelo visual que você enviou (4 quadrantes). -->
+        <div class="hero-photo" style="background-image:url('./images/hero.webp'); background-size:cover; background-position:center;"></div>
+
+        <!-- Removidos: badge “Carlos M.” e a nota 4.9/5 -->
       </div>
     </div>
   </section>
@@ -177,7 +175,7 @@
       <div class="footer-top">
         <div class="brand">
           <div class="logo-row">
-            <img class="logo-img" src="./images/logo-serviciosya.svg?v=1" alt="Logo Servicios Ya" width="28" height="28" />
+            <img src="./images/logo-serviciosya.svg" alt="Logo Servicios Ya" class="logo-img" width="28" height="28" />
             <span class="logo-text">Servicios <strong>Ya</strong></span>
           </div>
           <p>Plataforma de multiservicios de confianza en La Rioja.</p>
@@ -337,6 +335,6 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.4.1"></script>
+  <script defer src="./js/main.js?v=1.4.2"></script>
 </body>
 </html>
