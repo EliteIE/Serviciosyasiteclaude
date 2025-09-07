@@ -8,8 +8,8 @@
   <meta name="description" content="Contratá profesionales de confianza en La Rioja: plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería. Reservá online de forma rápida y segura." />
 
   <!-- Estilos -->
-  <link rel="preload" href="./css/styles.css?v=1.4.0" as="style" />
-  <link rel="stylesheet" href="./css/styles.css?v=1.4.0" />
+  <link rel="preload" href="./css/styles.css?v=1.5.0" as="style" />
+  <link rel="stylesheet" href="./css/styles.css?v=1.5.0" />
 
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
@@ -29,6 +29,9 @@
         <span class="logo-mark">🛠️</span>
         <span class="logo-text">Servicios <strong>Ya</strong></span>
       </a>
+
+      <!-- Toggle mobile (JS já lida se não existir) -->
+      <button id="mobileToggle" class="mobile-toggle" aria-label="Abrir menú" aria-controls="navMenu" aria-expanded="false">☰</button>
 
       <nav class="nav" id="navMenu" aria-label="Principal">
         <a class="nav-link" href="#servicios">Servicios</a>
@@ -59,7 +62,7 @@
           <button class="btn-primary search-btn" type="submit">Buscar</button>
         </form>
 
-        <!-- Só mantemos a métrica de verificados -->
+        <!-- Métrica -->
         <div class="metrics-row" aria-label="Garantías">
           <span class="metric">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -300,32 +303,32 @@
             <div class="form-group is-disabled">
               <label for="description">Descripción del trabajo</label>
               <textarea id="description" rows="3" placeholder="Ej: Pérdida de agua en el baño..." disabled></textarea>
-              <small class="helper">Sé breve y claro.</small>
+              <small class="hint">Sé breve y claro.</small>
             </div>
 
             <div class="form-row">
               <div class="form-group is-disabled">
                 <label for="name">Tu Nombre</label>
-                <input type="text" id="name" required disabled />
+                <input type="text" id="name" autocomplete="name" required disabled />
               </div>
               <div class="form-group is-disabled">
                 <label for="phone">Teléfono</label>
-                <input type="tel" id="phone" required disabled />
+                <input type="tel" id="phone" autocomplete="tel" required disabled />
               </div>
             </div>
 
-            <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="form-row grid-3">
               <div class="form-group is-disabled">
                 <label for="barrio">Barrio</label>
-                <input type="text" id="barrio" required disabled />
+                <input type="text" id="barrio" autocomplete="address-level2" required disabled />
               </div>
               <div class="form-group is-disabled">
                 <label for="calle">Calle</label>
-                <input type="text" id="calle" required disabled />
+                <input type="text" id="calle" autocomplete="address-line1" required disabled />
               </div>
               <div class="form-group is-disabled">
                 <label for="numero">Número</label>
-                <input type="text" id="numero" inputmode="numeric" required disabled />
+                <input type="text" id="numero" inputmode="numeric" autocomplete="on" required disabled />
               </div>
             </div>
 
@@ -347,6 +350,6 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.4.0"></script>
+  <script defer src="./js/main.js?v=1.5.0"></script>
 </body>
 </html>
