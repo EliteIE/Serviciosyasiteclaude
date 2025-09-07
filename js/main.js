@@ -1,6 +1,6 @@
 /**
  * Servicios Ya - JavaScript Principal (GitHub Pages safe)
- * v1.4.0
+ * v1.5.0
  * - Busca no hero
  * - Modal com fluxo guiado (stepper) e validações
  * - Data mínima D+1 e horários de hora em hora (08–20h)
@@ -150,16 +150,18 @@ function openServiceModal(preset) {
   modal.classList.add("show");
   document.body.style.overflow = "hidden";
 
-  // seta serviço se veio da grade
+  // 1) garantir inputs (D+1/hora) e listeners do stepper
+  initScheduling();
+  initStepper(true);
+
+  // 2) setar o serviço (se veio da grade) e disparar change APÓS listeners existirem
   const serviceType = document.getElementById("serviceType");
   if (preset && serviceType) {
     serviceType.value = preset;
-    // dispara change para o stepper já liberar os próximos campos
     serviceType.dispatchEvent(new Event("change", { bubbles: true }));
+    // foco direto na data para agilizar
+    setTimeout(() => document.getElementById("scheduleDate")?.focus(), 60);
   }
-
-  initScheduling(); // garante D+1 e horários
-  initStepper(true); // true = forçar revalidação ao abrir
 }
 
 function closeServiceModal() {
@@ -194,7 +196,6 @@ function initForm() {
       numero: f.numero.value.trim(),
     };
 
-    // WhatsApp (teste). Na produção trocaremos para e-mail/endpoint.
     const txt = encodeURIComponent(
       `Hola! Quiero solicitar un servicio:\n` +
         `• Tipo: ${payload.service}\n` +
@@ -206,8 +207,10 @@ function initForm() {
         `Nota: Cancelación sin costo hasta 24h antes del horario reservado.`
     );
     window.open(`https://wa.me/${WA_NUMBER}?text=${txt}`, "_blank");
+
     closeServiceModal();
     form.reset();
+    initScheduling();
     initStepper(true);
   });
 }
@@ -379,23 +382,26 @@ function initStepper(forceRevalidate = false) {
 
   const groups = {
     step2: [f.date, f.time], // agenda
-    step3: [f.description],  // detalhe (opcional liberar junto com step2)
+    step3: [f.description],  // detalhe
     step4: [f.name, f.phone, f.barrio, f.calle, f.numero], // contato/endereço
   };
 
   function setEnabled(els, enable) {
-    els.forEach((el) => {
-      if (!el) return;
-      el.disabled = !enable;
-      el.closest(".form-group")?.classList.toggle("is-disabled", !enable);
-    });
+    // aplica em microtask para evitar "estado travado" em alguns mobiles
+    setTimeout(() => {
+      els.forEach((el) => {
+        if (!el) return;
+        el.disabled = !enable;
+        el.closest(".form-group")?.classList.toggle("is-disabled", !enable);
+      });
+    }, 0);
   }
 
   function isValidService() {
     return !!f.service.value;
   }
   function isValidDateTime() {
-    const okDate = f.date.value && f.date.value >= f.date.min;
+    const okDate = f.date.value && (!f.date.min || f.date.value >= f.date.min);
     const okTime = !!f.time.value;
     return okDate && okTime;
   }
@@ -408,17 +414,18 @@ function initStepper(forceRevalidate = false) {
 
   function update() {
     // Step 1 -> Step 2
-    setEnabled(groups.step2, isValidService());
+    const sOk = isValidService();
+    setEnabled(groups.step2, sOk);
 
     // Step 2 -> Step 3 e 4
-    const step2ok = isValidService() && isValidDateTime();
+    const step2ok = sOk && isValidDateTime();
     setEnabled(groups.step3, step2ok);
     setEnabled(groups.step4, step2ok);
 
     // Botão final
     const allOk =
-      isValidService() &&
-      isValidDateTime() &&
+      sOk &&
+      step2ok &&
       f.name.value.trim() &&
       isValidPhone(f.phone.value) &&
       isValidAddress();
@@ -426,15 +433,27 @@ function initStepper(forceRevalidate = false) {
     f.submit.classList.toggle("is-disabled", !allOk);
   }
 
-  // Listeners
-  [f.service, f.date, f.time, f.description, f.name, f.phone, f.barrio, f.calle, f.numero]
-    .filter(Boolean)
-    .forEach((el) => {
-      el.addEventListener("change", update);
-      el.addEventListener("input", debounce(update, 120));
-    });
+  // UX: focos automáticos
+  f.service?.addEventListener("change", () => {
+    update();
+    if (isValidService()) setTimeout(() => f.date?.focus(), 60);
+  });
+  f.date?.addEventListener("change", () => {
+    update();
+    if (isValidDateTime()) setTimeout(() => f.description?.focus(), 60);
+  });
+  f.time?.addEventListener("change", update);
+  f.description?.addEventListener("input", debounce(update, 120));
+  f.name?.addEventListener("input", debounce(update, 120));
+  f.phone?.addEventListener("input", debounce(update, 120));
+  f.barrio?.addEventListener("input", debounce(update, 120));
+  f.calle?.addEventListener("input", debounce(update, 120));
+  f.numero?.addEventListener("input", debounce(update, 120));
 
-  // Estado inicial
-  if (forceRevalidate) update();
-  else update();
+  // Estado inicial / revalidação
+  update();
+  if (forceRevalidate) {
+    // força repaint em iOS para refletir enabled/disabled
+    requestAnimationFrame(update);
+  }
 }
