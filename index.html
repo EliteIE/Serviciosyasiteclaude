@@ -89,172 +89,121 @@
     </div>
   </section>
 
-  <!-- Servicios (Carrossel) -->
-  <section id="servicios" class="section" data-aos="fade-up">
-    <div class="container">
-      <h2 class="section-title">Servicios más solicitados</h2>
+  <!-- Servicios (CARROSSEL) -->
+<section id="servicios" class="section services-carousel" data-aos="fade-up">
+  <div class="container">
+    <h2 class="section-title center">Servicios más solicitados</h2>
 
-      <div class="services-carousel" id="servicesCarousel" aria-label="Carrusel de servicios">
-        <button class="sc-nav sc-prev" aria-label="Anterior" tabindex="-1">‹</button>
+    <div class="sc-viewport" id="svcCarousel" aria-roledescription="carousel">
+      <button class="sc-nav sc-prev" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="sc-nav sc-next" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5l7 7-7 7"/></svg>
+      </button>
 
-        <!-- track: mantém id=servicesGrid para a busca do hero -->
-        <ul class="sc-track" id="servicesGrid">
-          <!-- Plomería -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="plomeria agua cañeria caneria grifo baño cocina">
-              <figure class="sc-media">
+      <ul class="sc-track">
+        <!-- Slide 1 (2 cards) -->
+        <li class="sc-slide">
+          <div class="sc-cards">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-plomeria-960.webp"
-                  srcset="
-                    ./images/serviciosya-plomeria-640.webp 640w,
-                    ./images/serviciosya-plomeria-960.webp 960w,
-                    ./images/serviciosya-plomeria-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Plomería: ajuste de tubería con llave"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-plomeria-1280.webp"
+                  srcset="./images/serviciosya-plomeria-640.webp 640w, ./images/serviciosya-plomeria-960.webp 960w, ./images/serviciosya-plomeria-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Plomería">
               </figure>
-              <div class="sc-body">
-                <h3>Plomería</h3>
-                <p>Fugas, cañerías, grifería y sanitarios.</p>
-                <button class="link" onclick="openServiceModal('Plomería')">Pedir plomero</button>
-              </div>
+              <h3>Plomería</h3>
+              <p>Fugas, cañerías, grifería y sanitarios.</p>
+              <button class="link" onclick="openServiceModal('Plomería')">Pedir plomero</button>
             </article>
-          </li>
 
-          <!-- Electricidad -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="electricidad electrico tomas luminarias tablero cableado corto">
-              <figure class="sc-media">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-electricidad-960.webp"
-                  srcset="
-                    ./images/serviciosya-electricidad-640.webp 640w,
-                    ./images/serviciosya-electricidad-960.webp 960w,
-                    ./images/serviciosya-electricidad-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Electricidad: intervención en tablero eléctrico"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-electricidad-1280.webp"
+                  srcset="./images/serviciosya-electricidad-640.webp 640w, ./images/serviciosya-electricidad-960.webp 960w, ./images/serviciosya-electricidad-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Electricidad">
               </figure>
-              <div class="sc-body">
-                <h3>Electricidad</h3>
-                <p>Tableros, tomas, luminarias y urgencias.</p>
-                <button class="link" onclick="openServiceModal('Electricidad')">Pedir electricista</button>
-              </div>
+              <h3>Electricidad</h3>
+              <p>Tableros, tomas, luminarias y urgencias.</p>
+              <button class="link" onclick="openServiceModal('Electricidad')">Pedir electricista</button>
             </article>
-          </li>
+          </div>
+        </li>
 
-          <!-- Aire Acondicionado -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="aire acondicionado split mantenimiento carga gas instalacion">
-              <figure class="sc-media">
+        <!-- Slide 2 (2 cards) -->
+        <li class="sc-slide">
+          <div class="sc-cards">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-aire-acondicionado-960.webp"
-                  srcset="
-                    ./images/serviciosya-aire-acondicionado-640.webp 640w,
-                    ./images/serviciosya-aire-acondicionado-960.webp 960w,
-                    ./images/serviciosya-aire-acondicionado-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Aire acondicionado: mantenimiento de equipo split"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-aire-acondicionado-1280.webp"
+                  srcset="./images/serviciosya-aire-acondicionado-640.webp 640w, ./images/serviciosya-aire-acondicionado-960.webp 960w, ./images/serviciosya-aire-acondicionado-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Aire acondicionado">
               </figure>
-              <div class="sc-body">
-                <h3>Aire Acondicionado</h3>
-                <p>Instalación, mantenimiento y carga de gas.</p>
-                <button class="link" onclick="openServiceModal('Aire Acondicionado')">Pedir técnico</button>
-              </div>
+              <h3>Aire Acondicionado</h3>
+              <p>Instalación, mantenimiento y carga de gas.</p>
+              <button class="link" onclick="openServiceModal('Aire Acondicionado')">Pedir técnico</button>
             </article>
-          </li>
 
-          <!-- Carpintería -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="carpinteria madera muebles puertas reparaciones">
-              <figure class="sc-media">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-carpinteria-960.webp"
-                  srcset="
-                    ./images/serviciosya-carpinteria-640.webp 640w,
-                    ./images/serviciosya-carpinteria-960.webp 960w,
-                    ./images/serviciosya-carpinteria-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Carpintería: corte de madera con sierra"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-carpintería-1280.webp"
+                  onerror="this.src='./images/serviciosya-carpinteria-1280.webp'"
+                  srcset="./images/serviciosya-carpinteria-640.webp 640w, ./images/serviciosya-carpinteria-960.webp 960w, ./images/serviciosya-carpinteria-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Carpintería">
               </figure>
-              <div class="sc-body">
-                <h3>Carpintería</h3>
-                <p>Muebles a medida, puertas y reparaciones.</p>
-                <button class="link" onclick="openServiceModal('Carpintería')">Pedir carpintero</button>
-              </div>
+              <h3>Carpintería</h3>
+              <p>Muebles a medida, puertas y reparaciones.</p>
+              <button class="link" onclick="openServiceModal('Carpintería')">Pedir carpintero</button>
             </article>
-          </li>
+          </div>
+        </li>
 
-          <!-- Limpieza -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="limpieza hogar oficina fin de obra aseo">
-              <figure class="sc-media">
+        <!-- Slide 3 (2 cards) -->
+        <li class="sc-slide">
+          <div class="sc-cards">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-limpieza-960.webp"
-                  srcset="
-                    ./images/serviciosya-limpieza-640.webp 640w,
-                    ./images/serviciosya-limpieza-960.webp 960w,
-                    ./images/serviciosya-limpieza-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Limpieza: higienización de superficies"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-limpieza-1280.webp"
+                  srcset="./images/serviciosya-limpieza-640.webp 640w, ./images/serviciosya-limpieza-960.webp 960w, ./images/serviciosya-limpieza-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Limpieza">
               </figure>
-              <div class="sc-body">
-                <h3>Limpieza</h3>
-                <p>Hogares, oficinas y fin de obra.</p>
-                <button class="link" onclick="openServiceModal('Limpieza')">Pedir limpieza</button>
-              </div>
+              <h3>Limpieza</h3>
+              <p>Hogares, oficinas y fin de obra.</p>
+              <button class="link" onclick="openServiceModal('Limpieza')">Pedir limpieza</button>
             </article>
-          </li>
 
-          <!-- Jardinería -->
-          <li class="sc-slide">
-            <article class="service-card sc-card" data-tags="jardineria cesped poda plantas riego jardin">
-              <figure class="sc-media">
+            <article class="service-card">
+              <figure class="media">
                 <img
-                  src="./images/serviciosya-jardineria-960.webp"
-                  srcset="
-                    ./images/serviciosya-jardineria-640.webp 640w,
-                    ./images/serviciosya-jardineria-960.webp 960w,
-                    ./images/serviciosya-jardineria-1280.webp 1280w
-                  "
-                  sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 46vw"
-                  width="640" height="360"
-                  alt="Jardinería: poda y mantenimiento de arbustos"
-                  loading="lazy"
-                >
+                  src="./images/serviciosya-jardinería-1280.webp"
+                  onerror="this.src='./images/serviciosya-jardineria-1280.webp'"
+                  srcset="./images/serviciosya-jardineria-640.webp 640w, ./images/serviciosya-jardineria-960.webp 960w, ./images/serviciosya-jardineria-1280.webp 1280w"
+                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
+                  alt="Jardinería">
               </figure>
-              <div class="sc-body">
-                <h3>Jardinería</h3>
-                <p>Poda, césped y mantenimiento general.</p>
-                <button class="link" onclick="openServiceModal('Jardinería')">Pedir jardinero</button>
-              </div>
+              <h3>Jardinería</h3>
+              <p>Poda, césped y mantenimiento general.</p>
+              <button class="link" onclick="openServiceModal('Jardinería')">Pedir jardinero</button>
             </article>
-          </li>
-        </ul>
+          </div>
+        </li>
+      </ul>
 
-        <button class="sc-nav sc-next" aria-label="Siguiente" tabindex="-1">›</button>
-      </div>
+      <div class="sc-dots" aria-label="Paginación"></div>
     </div>
-  </section>
-
+  </div>
+</section>
+  
   <!-- Cómo Funciona -->
   <section id="como-funciona" class="section how" data-aos="fade-up">
     <div class="container">
