@@ -1,6 +1,6 @@
 /* =========================
    Servicios Ya - styles.css
-   v1.5.1 (carousel + fixes)
+   v1.6.0 (grid + hover + smart tweaks)
    ========================= */
 
 /* ==== Reset & tokens ==== */
@@ -42,7 +42,7 @@ a:hover{text-decoration:underline}
 .btn-primary:hover{filter:brightness(.95)}
 .btn-secondary{background:#fff;color:var(--primary);border-color:rgba(2,6,23,.08);box-shadow:var(--shadow)}
 .btn-secondary:hover{background:#f3f6ff}
-.link{padding:.5rem .9rem;border-radius:10px;border-color:#e5e7eb}
+.link{padding:.5rem .9rem;border-radius:10px;border:1px solid #e5e7eb}
 .link:hover{background:#f8fafc}
 
 /* ==== Header ==== */
@@ -53,8 +53,6 @@ a:hover{text-decoration:underline}
 .site-header.scrolled{box-shadow:0 6px 18px rgba(2,6,23,.06)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-weight:800;font-size:1.1rem}
-.logo .logo-mark{font-size:1.3rem}
-/* ajuste de logo PNG/SVG */
 .logo .logo-img{height:28px;width:auto;object-fit:contain}
 .nav{display:flex;align-items:center;gap:1rem}
 .nav a{color:var(--text);opacity:.85;line-height:1}
@@ -68,17 +66,11 @@ a:hover{text-decoration:underline}
 }
 .mobile-toggle span{display:block;width:20px;height:2px;background:#1f2937;margin:4px 0}
 
-/* ==== Hero (base) ==== */
+/* ==== Hero ==== */
 .hero{background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%)}
 .hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:56px 0}
 .hero-copy h1{margin:0 0 .6rem;font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-.02em}
 .hero-copy p{margin:0 0 1rem;color:var(--muted)}
-.hero-actions{display:flex;gap:.75rem;flex-wrap:wrap}
-.hero-placeholder{height:320px;border-radius:var(--radius);background:
-  radial-gradient(1200px 300px at 120% -40%, rgba(13,71,161,.15), transparent 60%),
-  linear-gradient(135deg,#dbeafe,#eff6ff); box-shadow:var(--shadow)}
-
-/* ==== Hero Modern ==== */
 .hero--modern{background:linear-gradient(135deg,#0D47A1 0%, #22c55e 100%); color:#fff}
 .hero--modern .hero-copy h1{color:#fff}
 .hero--modern .hero-copy p{color:#E7ECF5}
@@ -94,100 +86,90 @@ a:hover{text-decoration:underline}
 .metric{display:inline-flex;gap:.4rem;align-items:center;background:#ffffff22;border:1px solid #ffffff40;border-radius:9999px;padding:.35rem .7rem}
 .metric svg{width:18px;height:18px;fill:#fff;opacity:.9}
 
-/* Lado direito do hero */
 .hero-media{position:relative}
 .hero-photo{
   height:360px;border-radius:22px;box-shadow:var(--shadow);
-  /* gradiente de fallback; a imagem vem do style inline no index */
   background: linear-gradient(180deg,#c7d2fe,#9ae6b4);
   background-size: cover; background-position: center;
 }
-.card{border:1px solid #E5E7EB}
-.hero-rating.card,.hero-badge.card{
-  position:absolute;right:-10px;background:#fff;color:#111;padding:.7rem .9rem;border-radius:14px;box-shadow:var(--shadow)
-}
-.hero-rating{bottom:-18px;display:flex;gap:.6rem;align-items:center}
-.stars{letter-spacing:.2rem}
-.hero-badge{top:-18px}
 
 /* ==== Sections & titles ==== */
 .section{padding:56px 0}
 .section-title{font-size:clamp(22px,3vw,32px);margin:0 0 20px}
-.section-title.center{ text-align:center } /* centraliza quando solicitado */
+.section-title.center{text-align:center}
 
-/* ==== Services grid (fallback) ==== */
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+/* =========================================================
+   SERVICES GRID (sem carrossel)
+   ========================================================= */
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0,1fr));
+  gap:18px;
+}
+
+/* Card base */
 .service-card{
-  background:var(--surface);border:1px solid #E5E7EB;border-radius:18px;padding:18px 18px 16px;
-  box-shadow:var(--shadow);min-height:142px;display:flex;flex-direction:column;justify-content:space-between
+  background:var(--surface);
+  border:1px solid #E5E7EB;
+  border-radius:18px;
+  padding:18px 18px 16px;
+  box-shadow:var(--shadow);
+  min-height:142px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:transform .18s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
 }
 .service-card h3{margin:.2rem 0 .3rem;font-size:20px}
 .service-card p{margin:0 0 .8rem;color:var(--muted)}
-.service-card.is-dim{opacity:.35;filter:grayscale(.1)}
+.service-card .link{align-self:flex-start}
 
-/* ==== Services Carousel (novo) ==== */
-.services-carousel{position:relative}
-.services-carousel .section-title{margin-bottom:12px}
-
-/* viewport/track */
-.sc-viewport{position:relative;overflow:hidden}
-.sc-track{display:flex;will-change:transform;touch-action:pan-y;user-select:none}
-
-/* fade edges para dar noção de scroll */
-.sc-viewport::before,.sc-viewport::after{
-  content:"";position:absolute;top:0;bottom:0;width:40px;pointer-events:none;z-index:1
+/* Imagem bem enquadrada */
+.service-card .media{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:12px;
+  background:#eef2f7;
 }
-.sc-viewport::before{left:0;background:linear-gradient(to right,rgba(255,255,255,1),rgba(255,255,255,0))}
-.sc-viewport::after{right:0;background:linear-gradient(to left,rgba(255,255,255,1),rgba(255,255,255,0))}
-
-/* slides + cards por slide */
-.sc-slide{list-style:none;padding:0 9px}
-.sc-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px }
-@media (max-width:640px){ .sc-cards{ grid-template-columns:1fr } }
-
-/* cartão com imagem hero no topo */
-.service-card .media{ position:relative; width:100%; padding-top:56%; border-radius:14px; overflow:hidden; margin-bottom:12px }
-.service-card .media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.02); transition:transform .4s ease }
-.service-card:hover .media img{ transform:scale(1.06) }
+.service-card .media img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  transform:scale(1.02);
+  transition:transform .35s ease;
+}
+@supports not (aspect-ratio: 16/9){
+  .service-card .media{padding-top:56%}
+  .service-card .media img{position:absolute;inset:0}
+}
+/* leve filtro para dar contraste à imagem */
 .service-card .media::after{
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg,rgba(13,71,161,.08),rgba(249,115,22,.06));
-  mix-blend-mode:multiply;
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(13,71,161,.06),rgba(249,115,22,.04));
+  pointer-events:none;
 }
 
-/* cartão com imagem de fundo opcional */
-.services-carousel .service-card[data-bg]{position:relative;overflow:hidden}
-.services-carousel .service-card[data-bg]::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(13,71,161,.08),rgba(249,115,22,.06)), var(--bg);
-  background-size:cover;background-position:center;
-  opacity:.18;transition:opacity .2s, transform .4s ease;filter:saturate(1.05) contrast(1.02)
+/* Hover: realce suave */
+.service-card:hover{
+  transform:translateY(-3px);
+  background:linear-gradient(180deg,#ffffff,#f3f7ff);
+  border-color:#DBEAFE;               /* azul clarinho */
+  box-shadow:0 16px 30px rgba(2,6,23,.12);
 }
-.services-carousel .service-card:hover::before{opacity:.23;transform:scale(1.02)}
+.service-card:hover .media img{ transform:scale(1.06) }
 
-/* segurança: overlays nunca bloqueiam clique de botões/links */
-.service-card::before,
-.service-card .media::after{ pointer-events:none }
-
-/* navegação (aparece no hover/focus) */
-.sc-nav{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:44px;height:44px;border-radius:9999px;border:1px solid #E5E7EB;
-  background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:var(--shadow);
-  z-index:5;opacity:0;visibility:hidden;transition:opacity .2s, transform .2s
+/* Destaque quando a busca encontra (is-hot) */
+@keyframes hotPulse{
+  0%{box-shadow:0 0 0 0 rgba(59,130,246,.35)}
+  100%{box-shadow:0 0 0 12px rgba(59,130,246,0)}
 }
-.sc-prev{left:-6px}
-.sc-next{right:-6px}
-.sc-nav svg{width:20px;height:20px;color:#111827}
-.services-carousel:hover .sc-nav,
-.services-carousel:focus-within .sc-nav{opacity:1;visibility:visible}
-
-/* dots de paginação */
-.sc-dots{ display:flex; gap:8px; justify-content:center; margin-top:14px }
-.sc-dots button{
-  width:8px; height:8px; border-radius:9999px; border:0; background:#d1d5db; opacity:.85; cursor:pointer
+.service-card.is-hot{
+  border-color:#93c5fd;
+  animation:hotPulse 900ms ease-out 2;
 }
-.sc-dots button[aria-current="true"]{ background:var(--primary) }
 
 /* ==== Cómo Funciona ==== */
 .how .center{text-align:center}
@@ -251,15 +233,14 @@ textarea{resize:vertical}
 }
 
 /* ==== Responsive ==== */
-@media (max-width: 1100px){
-  .hero-rating.card,.hero-badge.card{right:0}
+@media (max-width: 1200px){
+  .services-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media (max-width: 960px){
   .hero-inner{grid-template-columns:1fr}
-  .services-grid{grid-template-columns:repeat(2,1fr)} /* fallback */
+  .services-grid{grid-template-columns:repeat(2,1fr)}
   .footer-top{grid-template-columns:1fr}
   .modal-grid{grid-template-columns:1fr}
-  /* menu mobile */
   .mobile-toggle{display:inline-flex}
   .nav{
     display:none;position:absolute;top:64px;right:16px;left:16px;z-index:120;
@@ -268,19 +249,12 @@ textarea{resize:vertical}
   }
   .nav.active{display:flex}
   .nav .btn-primary{width:100%;margin:4px 0 0}
-
-  /* carrossel: botões um pouco mais para dentro */
-  .sc-prev{left:4px}
-  .sc-next{right:4px}
 }
 @media (max-width: 640px){
-  .services-grid{grid-template-columns:1fr} /* fallback */
+  .services-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .how-grid{grid-template-columns:1fr}
   .search-bar{flex-direction:column;align-items:stretch}
   .search-btn{width:100%}
   .hero-photo{height:300px}
-
-  .sc-slide{padding:0 6px}
-  .sc-viewport::before,.sc-viewport::after{width:24px}
 }
