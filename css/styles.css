@@ -54,7 +54,8 @@ a:hover{text-decoration:underline}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-weight:800;font-size:1.1rem}
 .logo .logo-mark{font-size:1.3rem}
-.logo img{width:28px;height:28px;object-fit:contain}
+/* ajuste de logo PNG/SVG */
+.logo .logo-img{height:28px;width:auto;object-fit:contain}
 .nav{display:flex;align-items:center;gap:1rem}
 .nav a{color:var(--text);opacity:.85;line-height:1}
 .nav a:hover{opacity:1}
@@ -97,9 +98,8 @@ a:hover{text-decoration:underline}
 .hero-media{position:relative}
 .hero-photo{
   height:360px;border-radius:22px;box-shadow:var(--shadow);
-  background:
-    linear-gradient(180deg,#c7d2fe,#9ae6b4);
-  background-image: url('../images/hero.webp');
+  /* gradiente de fallback; a imagem vem do style inline no index */
+  background: linear-gradient(180deg,#c7d2fe,#9ae6b4);
   background-size: cover; background-position: center;
 }
 .card{border:1px solid #E5E7EB}
