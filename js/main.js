@@ -1,7 +1,8 @@
 /**
  * Servicios Ya - JavaScript Principal
- * v1.4.2
- * - Busca no hero
+ * v1.5.0 (carousel + fixes)
+ * - Busca no hero (agora integrada ao carrossel)
+ * - Carrossel de serviços (2 por vez desktop, 1 mobile)
  * - Modal com fluxo guiado (stepper) e validações
  * - Data mínima D+1 e horários (08–20h)
  * - Envio por WhatsApp (testes) -> +54 380 426 4962
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeader();
   initMobileMenu();
   initSmoothScroll();
-  initServiceCards();
+  initMiniCardsPulse();       // <— renomeado e limitado aos .mini-card
   initPricingToggle();
   initModal();
   initForm();
@@ -22,9 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initPhoneMockup();
 
   // Novidades
-  initSearchBar();
+  initServicesCarousel();     // <— carrossel de serviços
+  initSearchBar();            // <— busca integrada ao carrossel
   initScheduling();
-  initStepper(true); // garante estado inicial
+  initStepper(true);
 });
 
 /* ============ Preloader ============ */
@@ -78,7 +80,6 @@ function initMobileMenu() {
     });
   });
 
-  // Fecha o menu ao voltar para desktop
   const mm = window.matchMedia("(min-width: 961px)");
   mm.addEventListener("change", (e) => {
     if (e.matches) {
@@ -108,9 +109,9 @@ function initSmoothScroll() {
   });
 }
 
-/* ============ Service Cards Animation (leve) ============ */
-function initServiceCards() {
-  const cards = document.querySelectorAll(".mini-card, .service-card");
+/* ============ Mini-cards pulse (não mexe nos service-card) ============ */
+function initMiniCardsPulse() {
+  const cards = document.querySelectorAll(".mini-card");
   if (!cards.length) return;
   let currentIndex = 0;
   function rotateCards() {
@@ -138,6 +139,116 @@ function initPricingToggle() {
   });
 }
 
+/* ============ Carrossel de Serviços ============ */
+function initServicesCarousel() {
+  const root = document.getElementById("servicesCarousel");
+  if (!root) return;
+
+  const track = root.querySelector(".sc-track");
+  const slides = Array.from(track.children); // <li.sc-slide>
+  const prevBtn = root.querySelector(".sc-prev");
+  const nextBtn = root.querySelector(".sc-next");
+
+  let perView = 2;
+  let pageWidth = 0;
+  let pageCount = 1;
+  let index = 0;
+  let autoplay = null;
+
+  function computePerView() {
+    return window.innerWidth <= 640 ? 1 : 2;
+  }
+
+  function visibleSlidesCount() {
+    return slides.filter((s) => s.style.display !== "none").length;
+  }
+
+  function layout() {
+    perView = computePerView();
+    pageWidth = root.clientWidth || track.clientWidth;
+    const slideWidth = pageWidth / perView;
+    slides.forEach((s) => {
+      s.style.minWidth = slideWidth + "px";
+      s.style.maxWidth = slideWidth + "px";
+      s.style.flex = `0 0 ${slideWidth}px`;
+    });
+    pageCount = Math.max(1, Math.ceil(visibleSlidesCount() / perView));
+    index = Math.min(index, pageCount - 1);
+    moveTo(index, false);
+    updateNav();
+  }
+
+  function moveTo(i, animate = true) {
+    track.style.transition = animate ? "transform 400ms ease" : "none";
+    track.style.transform = `translateX(${-i * pageWidth}px)`;
+    if (animate) setTimeout(() => (track.style.transition = ""), 420);
+  }
+
+  function updateNav() {
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index >= pageCount - 1;
+  }
+
+  function next() { index = (index + 1) % pageCount; moveTo(index); updateNav(); }
+  function prev() { index = (index - 1 + pageCount) % pageCount; moveTo(index); updateNav(); }
+
+  function startAuto() { stopAuto(); autoplay = setInterval(next, 10000); }
+  function stopAuto()  { if (autoplay) clearInterval(autoplay); autoplay = null; }
+
+  // Botões
+  prevBtn.addEventListener("click", () => { prev(); startAuto(); });
+  nextBtn.addEventListener("click", () => { next(); startAuto(); });
+
+  // Pausa em hover/focus
+  root.addEventListener("mouseenter", stopAuto);
+  root.addEventListener("mouseleave", startAuto);
+  root.addEventListener("focusin", stopAuto);
+  root.addEventListener("focusout", startAuto);
+
+  // Pausa quando a aba perde foco
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAuto(); else startAuto();
+  });
+
+  // Swipe (touch/mouse)
+  let isDown = false, startX = 0, lastX = 0;
+  const threshold = 50;
+  track.addEventListener("pointerdown", (e) => {
+    isDown = true; startX = lastX = e.clientX;
+    track.setPointerCapture?.(e.pointerId);
+    stopAuto();
+  });
+  window.addEventListener("pointermove", (e) => {
+    if (!isDown) return;
+    lastX = e.clientX;
+    const dx = lastX - startX;
+    track.style.transition = "none";
+    track.style.transform = `translateX(${(-index * pageWidth) + dx}px)`;
+  });
+  window.addEventListener("pointerup", () => {
+    if (!isDown) return;
+    const dx = lastX - startX;
+    isDown = false;
+    if (Math.abs(dx) > threshold) {
+      dx < 0 ? next() : prev();
+    } else {
+      moveTo(index);
+    }
+    startAuto();
+  });
+
+  window.addEventListener("resize", throttle(layout, 150));
+
+  // API simples para a busca reajustar o layout quando esconder/mostrar slides
+  root.__reflowCarousel = () => {
+    pageCount = Math.max(1, Math.ceil(visibleSlidesCount() / computePerView()));
+    layout();
+  };
+
+  layout();
+  startAuto();
+}
+
 /* ============ Modal ============ */
 let __modalFocusCleanup = null;
 
@@ -160,7 +271,6 @@ function openServiceModal(preset) {
   modal.classList.add("show");
   document.body.style.overflow = "hidden";
 
-  // focus trap simples
   __modalFocusCleanup = trapFocus(modal);
 
   const serviceType = document.getElementById("serviceType");
@@ -320,32 +430,45 @@ function formatDMY(ymd) {
   return `${d}/${m}/${y}`;
 }
 
-/* ============ Busca no hero ============ */
+/* ============ Busca no hero (integra com carrossel) ============ */
 function initSearchBar() {
   const form = document.getElementById("searchForm");
   const input = document.getElementById("searchInput");
-  const grid = document.getElementById("servicesGrid");
-  if (!form || !input || !grid) return;
+  const track = document.getElementById("servicesGrid"); // <ul.sc-track>
+  if (!form || !input || !track) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const q = input.value.trim().toLowerCase();
-    const cards = grid.querySelectorAll(".service-card");
+    const cards = track.querySelectorAll(".service-card");
     let any = false;
 
     cards.forEach((c) => {
       const tags = (c.getAttribute("data-tags") || "").toLowerCase();
       const title = (c.querySelector("h3")?.textContent || "").toLowerCase();
       const match = !q || tags.includes(q) || title.includes(q);
-      c.style.display = match ? "" : "none";
+
+      // esconde/mostra o artigo e seu <li.sc-slide> para não quebrar o layout do carrossel
+      const slide = c.closest(".sc-slide");
+      if (slide) slide.style.display = match ? "" : "none";
+
       c.classList.toggle("is-dim", q && !match);
       if (match) any = true;
     });
 
     document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
+    // Recalcula páginas do carrossel após o filtro
+    const carousel = document.getElementById("servicesCarousel");
+    carousel?.__reflowCarousel?.();
+
+    // se nada encontrou, volta tudo após 2.4s
     if (!any) {
-      setTimeout(() => cards.forEach((c) => ((c.style.display = ""), c.classList.remove("is-dim"))), 2400);
+      setTimeout(() => {
+        track.querySelectorAll(".sc-slide").forEach((li) => (li.style.display = ""));
+        cards.forEach((c) => c.classList.remove("is-dim"));
+        carousel?.__reflowCarousel?.();
+      }, 2400);
     }
   });
 }
@@ -456,7 +579,6 @@ function trapFocus(container) {
   }
 
   container.addEventListener("keydown", onKey);
-  // foca o primeiro focável do modal
   setTimeout(() => first.focus(), 0);
 
   return () => {
