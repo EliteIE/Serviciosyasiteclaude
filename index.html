@@ -17,11 +17,24 @@
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
-  <!-- Fallback mínimo -->
+  <!-- Fallback mínimo + ajustes locais dos cards com imagem e hover -->
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
     .logo-img{height:28px;width:auto;display:block}
+
+    /* ---- Cards com imagem (sem carrossel) ---- */
+    .cards-with-media .service-card{position:relative; overflow:hidden; transition:transform .2s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease}
+    .cards-with-media .service-card .media{aspect-ratio:16/9; border-radius:14px; overflow:hidden; margin:6px 0 12px; background:#EEF2F7}
+    .cards-with-media .service-card .media img{width:100%; height:100%; object-fit:cover; object-position:center; transition:transform .35s ease, filter .35s ease}
+    .cards-with-media .service-card:hover{transform:translateY(-3px); box-shadow:0 18px 34px rgba(13,71,161,.12); background:linear-gradient(0deg, rgba(13,71,161,.06), #fff 42%)}
+    .cards-with-media .service-card:hover h3{color:#0D47A1}
+    .cards-with-media .service-card:hover .media img{transform:scale(1.04)}
+    /* Destaque rápido quando a busca encontra um serviço */
+    .service-card.is-hot{outline:3px solid #F97316; outline-offset:3px}
+
+    /* Centraliza o título da seção (garantia, mesmo sem CSS externo) */
+    .section-title.center{text-align:center}
   </style>
 </head>
 
@@ -67,7 +80,7 @@
         <form id="searchForm" class="search-bar" role="search" aria-label="Buscar servicios">
           <div class="search-input">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28v.79L20 21.5 21.5 20l-6-6zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/></svg>
-            <input id="searchInput" type="search" placeholder="¿Qué servicio necesitás?" autocomplete="off" />
+            <input id="searchInput" type="search" placeholder="¿Qué servicio necesitás? Escribí libremente (ej: 'quiero un electricista')" autocomplete="off" />
           </div>
           <button class="btn-primary search-btn" type="submit">Buscar</button>
         </form>
@@ -89,121 +102,99 @@
     </div>
   </section>
 
-  <!-- Servicios (CARROSSEL) -->
-<section id="servicios" class="section services-carousel" data-aos="fade-up">
-  <div class="container">
-    <h2 class="section-title center">Servicios más solicitados</h2>
+  <!-- Servicios (GRID sem carrossel) -->
+  <section id="servicios" class="section" data-aos="fade-up">
+    <div class="container">
+      <h2 class="section-title center">Servicios más solicitados</h2>
 
-    <div class="sc-viewport" id="svcCarousel" aria-roledescription="carousel">
-      <button class="sc-nav sc-prev" aria-label="Anterior">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 19l-7-7 7-7"/></svg>
-      </button>
-      <button class="sc-nav sc-next" aria-label="Siguiente">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5l7 7-7 7"/></svg>
-      </button>
+      <div class="services-grid cards-with-media" id="servicesGrid">
+        <!-- Plomería -->
+        <article class="service-card" data-tags="plomeria plomero fontanero fuga agua caño caneria caneria cano grifo baño sanitario">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-plomeria-1280.webp"
+              srcset="./images/serviciosya-plomeria-640.webp 640w, ./images/serviciosya-plomeria-960.webp 960w, ./images/serviciosya-plomeria-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Plomería - arreglo de cañerías y sanitarios">
+          </figure>
+          <h3>Plomería</h3>
+          <p>Fugas, cañerías, grifería y sanitarios.</p>
+          <button class="link" onclick="openServiceModal('Plomería')">Pedir plomero</button>
+        </article>
 
-      <ul class="sc-track">
-        <!-- Slide 1 (2 cards) -->
-        <li class="sc-slide">
-          <div class="sc-cards">
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-plomeria-1280.webp"
-                  srcset="./images/serviciosya-plomeria-640.webp 640w, ./images/serviciosya-plomeria-960.webp 960w, ./images/serviciosya-plomeria-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Plomería">
-              </figure>
-              <h3>Plomería</h3>
-              <p>Fugas, cañerías, grifería y sanitarios.</p>
-              <button class="link" onclick="openServiceModal('Plomería')">Pedir plomero</button>
-            </article>
+        <!-- Electricidad -->
+        <article class="service-card" data-tags="electricidad electricista luz corto circuito enchufe toma tomacorriente tablero disyuntor lámpara luminaria cableado">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-electricidad-1280.webp"
+              srcset="./images/serviciosya-electricidad-640.webp 640w, ./images/serviciosya-electricidad-960.webp 960w, ./images/serviciosya-electricidad-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Electricidad - tableros, tomas y luminarias">
+          </figure>
+          <h3>Electricidad</h3>
+          <p>Tableros, tomas, luminarias y urgencias.</p>
+          <button class="link" onclick="openServiceModal('Electricidad')">Pedir electricista</button>
+        </article>
 
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-electricidad-1280.webp"
-                  srcset="./images/serviciosya-electricidad-640.webp 640w, ./images/serviciosya-electricidad-960.webp 960w, ./images/serviciosya-electricidad-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Electricidad">
-              </figure>
-              <h3>Electricidad</h3>
-              <p>Tableros, tomas, luminarias y urgencias.</p>
-              <button class="link" onclick="openServiceModal('Electricidad')">Pedir electricista</button>
-            </article>
-          </div>
-        </li>
+        <!-- Aire Acondicionado -->
+        <article class="service-card" data-tags="aire acondicionado split ac a/c instalacion mantenimiento carga de gas limpieza inverter climatizacion">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-aire-acondicionado-1280.webp"
+              srcset="./images/serviciosya-aire-acondicionado-640.webp 640w, ./images/serviciosya-aire-acondicionado-960.webp 960w, ./images/serviciosya-aire-acondicionado-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Aire acondicionado - instalación, mantenimiento y carga de gas">
+          </figure>
+          <h3>Aire Acondicionado</h3>
+          <p>Instalación, mantenimiento y carga de gas.</p>
+          <button class="link" onclick="openServiceModal('Aire Acondicionado')">Pedir técnico</button>
+        </article>
 
-        <!-- Slide 2 (2 cards) -->
-        <li class="sc-slide">
-          <div class="sc-cards">
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-aire-acondicionado-1280.webp"
-                  srcset="./images/serviciosya-aire-acondicionado-640.webp 640w, ./images/serviciosya-aire-acondicionado-960.webp 960w, ./images/serviciosya-aire-acondicionado-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Aire acondicionado">
-              </figure>
-              <h3>Aire Acondicionado</h3>
-              <p>Instalación, mantenimiento y carga de gas.</p>
-              <button class="link" onclick="openServiceModal('Aire Acondicionado')">Pedir técnico</button>
-            </article>
+        <!-- Carpintería -->
+        <article class="service-card" data-tags="carpinteria carpintero madera muebles puertas estantes placard ventana porton marco zocalo">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-carpinteria-1280.webp"
+              srcset="./images/serviciosya-carpinteria-640.webp 640w, ./images/serviciosya-carpinteria-960.webp 960w, ./images/serviciosya-carpinteria-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Carpintería - muebles a medida, puertas y reparaciones">
+          </figure>
+          <h3>Carpintería</h3>
+          <p>Muebles a medida, puertas y reparaciones.</p>
+          <button class="link" onclick="openServiceModal('Carpintería')">Pedir carpintero</button>
+        </article>
 
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-carpintería-1280.webp"
-                  onerror="this.src='./images/serviciosya-carpinteria-1280.webp'"
-                  srcset="./images/serviciosya-carpinteria-640.webp 640w, ./images/serviciosya-carpinteria-960.webp 960w, ./images/serviciosya-carpinteria-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Carpintería">
-              </figure>
-              <h3>Carpintería</h3>
-              <p>Muebles a medida, puertas y reparaciones.</p>
-              <button class="link" onclick="openServiceModal('Carpintería')">Pedir carpintero</button>
-            </article>
-          </div>
-        </li>
+        <!-- Limpieza -->
+        <article class="service-card" data-tags="limpieza aseo higienizacion hogar oficina fin de obra limpieza profunda desinfeccion tapizados">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-limpieza-1280.webp"
+              srcset="./images/serviciosya-limpieza-640.webp 640w, ./images/serviciosya-limpieza-960.webp 960w, ./images/serviciosya-limpieza-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Limpieza - hogares, oficinas y fin de obra">
+          </figure>
+          <h3>Limpieza</h3>
+          <p>Hogares, oficinas y fin de obra.</p>
+          <button class="link" onclick="openServiceModal('Limpieza')">Pedir limpieza</button>
+        </article>
 
-        <!-- Slide 3 (2 cards) -->
-        <li class="sc-slide">
-          <div class="sc-cards">
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-limpieza-1280.webp"
-                  srcset="./images/serviciosya-limpieza-640.webp 640w, ./images/serviciosya-limpieza-960.webp 960w, ./images/serviciosya-limpieza-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Limpieza">
-              </figure>
-              <h3>Limpieza</h3>
-              <p>Hogares, oficinas y fin de obra.</p>
-              <button class="link" onclick="openServiceModal('Limpieza')">Pedir limpieza</button>
-            </article>
-
-            <article class="service-card">
-              <figure class="media">
-                <img
-                  src="./images/serviciosya-jardinería-1280.webp"
-                  onerror="this.src='./images/serviciosya-jardineria-1280.webp'"
-                  srcset="./images/serviciosya-jardineria-640.webp 640w, ./images/serviciosya-jardineria-960.webp 960w, ./images/serviciosya-jardineria-1280.webp 1280w"
-                  sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 560px"
-                  alt="Jardinería">
-              </figure>
-              <h3>Jardinería</h3>
-              <p>Poda, césped y mantenimiento general.</p>
-              <button class="link" onclick="openServiceModal('Jardinería')">Pedir jardinero</button>
-            </article>
-          </div>
-        </li>
-      </ul>
-
-      <div class="sc-dots" aria-label="Paginación"></div>
+        <!-- Jardinería -->
+        <article class="service-card" data-tags="jardineria jardinero cesped pasto poda plantas riego desmalezar parque">
+          <figure class="media">
+            <img
+              src="./images/serviciosya-jardineria-1280.webp"
+              srcset="./images/serviciosya-jardineria-640.webp 640w, ./images/serviciosya-jardineria-960.webp 960w, ./images/serviciosya-jardineria-1280.webp 1280w"
+              sizes="(max-width: 640px) 92vw, (max-width: 960px) 46vw, 360px"
+              alt="Jardinería - poda, césped y mantenimiento general">
+          </figure>
+          <h3>Jardinería</h3>
+          <p>Poda, césped y mantenimiento general.</p>
+          <button class="link" onclick="openServiceModal('Jardinería')">Pedir jardinero</button>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
-  
+  </section>
+
   <!-- Cómo Funciona -->
   <section id="como-funciona" class="section how" data-aos="fade-up">
     <div class="container">
@@ -417,5 +408,103 @@
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script defer src="./js/main.js?v=1.4.2"></script>
+
+  <!-- Busca inteligente (override suave do listener antigo) -->
+  <script>
+    (function(){
+      const norm = s => (s||'')
+        .toLowerCase()
+        .normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')  // remove acentos
+        .replace(/[^a-z0-9\\s]/g,' ')                       // limpa pontuação
+        .replace(/\\s+/g,' ')
+        .trim();
+
+      // Dicionário de intenções (sinônimos, variações e erros comuns)
+      const catalog = {
+        'Plomería': [
+          'plomer','plomero','fontaner','agua','fuga','gote','caner','cano','caño',
+          'tuberia','tuberias','grifo','bano','baño','inodoro','sanitari','destapar','desague','sifon','lavabo'
+        ],
+        'Electricidad': [
+          'electric','eletric','electris','luz','corto','enchufe','tomacorriente','toma',
+          'interruptor','tablero','disyuntor','fusible','lampara','luminaria','cable','voltaje'
+        ],
+        'Aire Acondicionado': [
+          'aire','ac','a c','a/c','split','clima','climatizacion','frio','calor',
+          'mantenimiento de aire','limpieza de aire','carga de gas','gas r410','instalacion de aire','inverter'
+        ],
+        'Carpintería': [
+          'carpint','madera','mueble','armario','placard','estante','puerta','porton','ventana de madera','marco','zocalo'
+        ],
+        'Limpieza': [
+          'limpieza','limpiar','aseo','higiene','higien','desinfeccion','oficina','hogar','fin de obra','profunda','tapizado'
+        ],
+        'Jardinería': [
+          'jardin','jardiner','cesped','pasto','poda','arbusto','arbol','riego','plantas','desmalezar','parque'
+        ]
+      };
+
+      function detectService(q){
+        const nq = norm(q);
+        let best = null, bestScore = 0;
+        for(const [svc, kws] of Object.entries(catalog)){
+          let score = 0;
+          if(nq.includes(norm(svc))) score += 5;
+          for(const k of kws){ if(nq.includes(k)) score += Math.min(6, k.length); }
+          if(score > bestScore){ bestScore = score; best = svc; }
+        }
+        return bestScore > 0 ? best : null;
+      }
+
+      function highlightCard(serviceName){
+        const card = [...document.querySelectorAll('.service-card')]
+          .find(c => c.querySelector('h3')?.textContent.trim().toLowerCase() === serviceName.toLowerCase());
+        if(!card) return;
+        document.getElementById('servicios')?.scrollIntoView({behavior:'smooth'});
+        card.classList.add('is-hot');
+        setTimeout(()=>card.classList.remove('is-hot'), 1800);
+      }
+
+      function installSmartSearch(){
+        let form = document.getElementById('searchForm');
+        if(!form) return;
+
+        // Remove handlers antigos clonando o form
+        const clone = form.cloneNode(true);
+        form.parentNode.replaceChild(clone, form);
+        form = clone;
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const q = document.getElementById('searchInput').value;
+          const svc = detectService(q);
+
+          // Limpa possíveis filtros antigos
+          document.querySelectorAll('.service-card').forEach(c => c.style.display = '');
+
+          if(svc){
+            highlightCard(svc);
+          }else{
+            // fallback: busca simples por tags/title
+            const query = norm(q);
+            let any=false;
+            document.querySelectorAll('.service-card').forEach(c=>{
+              const tags = norm(c.getAttribute('data-tags')||'') + ' ' + norm(c.querySelector('h3')?.textContent||'');
+              const match = !query || tags.includes(query);
+              c.style.display = match ? '' : 'none';
+              any = any || match;
+            });
+            if(!any){
+              // se nada, reexibe tudo para não “sumir” os cards
+              document.querySelectorAll('.service-card').forEach(c => c.style.display = '');
+            }
+          }
+        });
+      }
+
+      // Aguarda main.js (defer) finalizar; então instala nossa busca
+      window.addEventListener('DOMContentLoaded', installSmartSearch);
+    })();
+  </script>
 </body>
 </html>
