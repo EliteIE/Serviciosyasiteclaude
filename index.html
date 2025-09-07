@@ -26,7 +26,8 @@
   <header id="header" class="site-header">
     <div class="container header-inner">
       <a class="logo" href="#inicio" aria-label="Servicios Ya">
-        <img class="logo-img" src="./images/logo-serviciosya.svg" alt="Servicios Ya" width="36" height="36" />
+        <!-- usa sua logo svg; o ?v=1 evita cache antigo -->
+        <img class="logo-img" src="./images/logo-serviciosya.svg?v=1" alt="Logo Servicios Ya" width="28" height="28" />
         <span class="logo-text">Servicios <strong>Ya</strong></span>
       </a>
 
@@ -76,7 +77,7 @@
       </div>
 
       <div class="hero-media" aria-hidden="true">
-        <div class="hero-photo"></div>
+        <div class="hero-photo"><!-- background via CSS: ./images/hero.webp --></div>
         <div class="hero-rating card">
           <div class="stars">★★★★★</div>
           <div class="rating-text">
@@ -84,7 +85,7 @@
             <span>Calificación promedio</span>
           </div>
         </div>
-        <div class="hero-badge card">✅ Carlos M.<br><small>Electricista certificado</small></div>
+        <!-- Badge removido -->
       </div>
     </div>
   </section>
@@ -176,7 +177,7 @@
       <div class="footer-top">
         <div class="brand">
           <div class="logo-row">
-            <img class="logo-img" src="./images/logo-serviciosya.svg" alt="Servicios Ya" width="28" height="28" />
+            <img class="logo-img" src="./images/logo-serviciosya.svg?v=1" alt="Logo Servicios Ya" width="28" height="28" />
             <span class="logo-text">Servicios <strong>Ya</strong></span>
           </div>
           <p>Plataforma de multiservicios de confianza en La Rioja.</p>
@@ -336,6 +337,6 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.4.2"></script>
+  <script defer src="./js/main.js?v=1.4.1"></script>
 </body>
 </html>
