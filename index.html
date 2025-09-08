@@ -8,8 +8,8 @@
   <meta name="description" content="Contratá profesionales de confianza en La Rioja: plomería, electricidad, aire acondicionado, carpintería, limpieza y jardinería. Reservá online de forma rápida y segura." />
 
   <!-- Estilos -->
-  <link rel="preload" href="./css/styles.css?v=1.4.2" as="style" />
-  <link rel="stylesheet" href="./css/styles.css?v=1.4.2" />
+  <link rel="preload" href="./css/styles.css?v=1.8.0" as="style" />
+  <link rel="stylesheet" href="./css/styles.css?v=1.8.0" />
 
   <!-- Preload logo -->
   <link rel="preload" href="./images/logo-serviciosya.png" as="image" />
@@ -17,7 +17,7 @@
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
-  <!-- Fallback mínimo + ajustes locais dos cards com imagem, hover e "Cómo Funciona" flow + FAQ + logo colorido -->
+  <!-- Fallback mínimo + ajustes locais dos cards + flow + FAQ + logo colorido -->
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
@@ -47,6 +47,11 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 22px;
       padding-top: 28px;
+
+      /* remove numeração do <ol> */
+      list-style: none;
+      margin-left: 0;
+      padding-left: 0;
     }
     .flow::before{
       content:"";
@@ -58,6 +63,8 @@
       position:relative; background:#fff; border:1px solid #E5E7EB; border-radius:18px;
       padding:18px; box-shadow:0 10px 24px rgba(2,6,23,.08);
       transition: transform .18s ease, box-shadow .22s ease, border-color .18s ease, background .18s;
+      text-align:center;
+      list-style:none;
     }
     .flow-step:hover{
       transform: translateY(-4px);
@@ -75,13 +82,15 @@
       display:grid; place-items:center; color:#fff;
       background: linear-gradient(135deg, #0D47A1 0%, #22c55e 100%);
       box-shadow:0 10px 24px rgba(13,71,161,.20);
-      margin-bottom:10px;
+      margin:0 auto 10px; /* centraliza o ícone */
     }
     .flow-icon svg{ width:28px; height:28px }
+    /* chip numérico no canto superior direito */
     .step-chip{
+      position:absolute; top:10px; right:12px;
       display:inline-flex; align-items:center; justify-content:center;
       width:32px; height:32px; border-radius:9999px; font-weight:800;
-      color:#0D47A1; background:#E6F0FF; margin-bottom:8px;
+      color:#0D47A1; background:#E6F0FF;
       box-shadow: inset 0 0 0 2px rgba(13,71,161,.10);
     }
     .flow-body h3{ margin:.1rem 0 .35rem; font-size:18px }
@@ -122,9 +131,7 @@
       content:"+"; font-weight:900; color:#64748B; font-size:20px; line-height:1;
     }
     .faq-item[aria-expanded="true"] .faq-q::after{ content:"−" }
-    .faq-a{
-      display:none; padding:0 18px 18px; color:var(--muted); border-top:1px solid #EEF2F7;
-    }
+    .faq-a{ display:none; padding:0 18px 18px; color:var(--muted); border-top:1px solid #EEF2F7 }
     .faq-item[aria-expanded="true"] .faq-a{ display:block }
   </style>
 </head>
@@ -150,6 +157,7 @@
       <nav class="nav" id="navMenu" aria-label="Principal">
         <a class="nav-link" href="#servicios">Servicios</a>
         <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
+        <a class="nav-link" href="#faq">Preguntas frecuentes</a>
         <a class="nav-link" href="#contacto">Contacto</a>
         <button class="btn-primary" onclick="openServiceModal()">Solicitar servicio</button>
       </nav>
@@ -423,13 +431,13 @@
           </div>
           <p>Plataforma de multiservicios de confianza en La Rioja.</p>
           <div class="social">
-            <a href="#" aria-label="Facebook">
+            <a href="https://www.facebook.com/profile.php?id=61574008856329&locale=pt_BR" target="_blank" rel="noopener" aria-label="Facebook">
               <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
-            <a href="#" aria-label="Instagram">
+            <a href="https://www.instagram.com/serviciosya.lr" target="_blank" rel="noopener" aria-label="Instagram">
               <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/></svg>
             </a>
-            <a href="#" aria-label="WhatsApp">
+            <a href="https://wa.me/543804264962" target="_blank" rel="noopener" aria-label="WhatsApp">
               <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487"/></svg>
             </a>
           </div>
@@ -463,11 +471,11 @@
             <ul>
               <li>
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                <a href="tel:+543804123456">+54 380 412-3456</a>
+                <a href="tel:+543804264962">+54 3804 26-4962</a>
               </li>
               <li>
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 13.5l-11.707-7.207c.41-.238.891-.375 1.407-.375h20.6c.516 0 .997.137 1.407.375L12 13.5zm0 2.1l-11.692-7.192c-.008.086-.016.172-.016.259v10.666c0 1.473 1.194 2.667 2.667 2.667h18.082c1.473 0 2.667-1.194 2.667-2.667V8.667c0-.087-.008-.173-.016-.259L12 15.6z"/></svg>
-                <a href="mailto:info@serviciosya.com.ar">info@serviciosya.com.ar</a>
+                <a href="mailto:contacto@serviciosyalr.com">contacto@serviciosyalr.com</a>
               </li>
               <li>
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"/></svg>
@@ -479,8 +487,7 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2024 Servicios Ya. Todos los derechos reservados.</p>
-        <p>Hecho con ❤️ en La Rioja</p>
+        <p>&copy; 2025 Servicios Ya. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
@@ -578,7 +585,7 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script defer src="./js/main.js?v=1.4.2"></script>
+  <script defer src="./js/main.js?v=1.8.0"></script>
 
   <!-- Busca inteligente (override suave do listener antigo) + FAQ -->
   <script>
@@ -674,7 +681,10 @@
           const btn = item.querySelector('.faq-q');
           btn.addEventListener('click', ()=>{
             const isOpen = item.getAttribute('aria-expanded') === 'true';
-            items.forEach(i=>{ i.setAttribute('aria-expanded','false'); i.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
+            items.forEach(i=>{
+              i.setAttribute('aria-expanded','false');
+              i.querySelector('.faq-q').setAttribute('aria-expanded','false');
+            });
             item.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
             btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
           });
