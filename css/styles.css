@@ -1,6 +1,6 @@
 /* =========================
    Servicios Ya - styles.css
-   v1.7.0 (grid + hover + flow)
+   v1.7.1 (grid + hover + flow fixes)
    ========================= */
 
 /* ==== Reset & tokens ==== */
@@ -177,6 +177,8 @@ a:hover{text-decoration:underline}
    CÓMO FUNCIONA — fluxo moderno com linha de progresso
    ========================================================= */
 .how--flow .how-subtitle{ text-align:center; color:var(--muted); margin:-6px 0 22px }
+
+/* zera numeração/marcadores quando <ol>/<ul> é usado */
 .flow{
   --track-h: 6px;
   position: relative;
@@ -184,6 +186,10 @@ a:hover{text-decoration:underline}
   grid-template-columns: repeat(4, 1fr);
   gap: 22px;
   padding-top: 28px;
+
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
 }
 .flow::before{
   content:"";
@@ -192,9 +198,13 @@ a:hover{text-decoration:underline}
   border-radius: 9999px;
 }
 .flow-step{
-  position:relative; background:#fff; border:1px solid #E5E7EB; border-radius:18px;
+  position:relative; 
+  background:#fff; border:1px solid #E5E7EB; border-radius:18px;
   padding:18px; box-shadow:var(--shadow);
   transition: transform .18s ease, box-shadow .22s ease, border-color .18s ease, background .18s;
+
+  list-style: none;
+  text-align: center;
 }
 .flow-step:hover{
   transform: translateY(-4px);
@@ -212,13 +222,16 @@ a:hover{text-decoration:underline}
   display:grid; place-items:center; color:#fff;
   background: linear-gradient(135deg, #0D47A1 0%, #22c55e 100%);
   box-shadow:0 10px 24px rgba(13,71,161,.20);
-  margin-bottom:10px;
+  margin:0 auto 10px; /* centraliza o ícone */
 }
 .flow-icon svg{ width:28px; height:28px }
+
+/* badge numérico no canto superior direito */
 .step-chip{
+  position:absolute; top:10px; right:12px;
   display:inline-flex; align-items:center; justify-content:center;
   width:32px; height:32px; border-radius:9999px; font-weight:800;
-  color:#0D47A1; background:#E6F0FF; margin-bottom:8px;
+  color:#0D47A1; background:#E6F0FF;
   box-shadow: inset 0 0 0 2px rgba(13,71,161,.10);
 }
 .flow-body h3{ margin:.1rem 0 .35rem; font-size:18px }
