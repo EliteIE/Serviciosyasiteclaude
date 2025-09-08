@@ -1,11 +1,12 @@
 /**
  * Servicios Ya - JavaScript Principal
- * v1.6.0 (grid + smart-search, sem carrossel)
+ * v1.7.0 (grid + smart-search + FAQ, sem carrossel)
  * - Busca no hero com entendimento semântico e variações/erros
  * - Grid de serviços (sem autoplay, sem reflow)
  * - Modal com fluxo guiado (stepper) e validações
  * - Data mínima D+1 e horários (08–20h)
  * - Envio por WhatsApp (testes) -> +54 380 426 4962
+ * - Accordion de Preguntas frecuentes (A11y + fecha os demais)
  */
 
 const WA_NUMBER = "543804264962"; // +54 380 426 4962
@@ -26,6 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearchBar();
   initScheduling();
   initStepper(true);
+
+  // Novo: FAQ
+  initFAQ();
 });
 
 /* ============ Preloader ============ */
@@ -326,7 +330,6 @@ function initSearchBar() {
   const grid = document.getElementById("servicesGrid");
   if (!form || !input || !grid) return;
 
-  // Normaliza: minúsculas, sem acentos, sem pontuação
   const norm = (s) =>
     (s || "")
       .toLowerCase()
@@ -336,7 +339,6 @@ function initSearchBar() {
       .replace(/\s+/g, " ")
       .trim();
 
-  // leve comparação "fuzzy" (distância de edição)
   function levenshtein(a, b) {
     if (!a || !b) return Math.max(a.length, b.length);
     const m = a.length, n = b.length;
@@ -363,7 +365,6 @@ function initSearchBar() {
     return (a.length >= 5 || b.length >= 5) ? d <= 2 : d <= 1;
   };
 
-  // Dicionário de intenções (sinônimos/erros comuns)
   const catalog = {
     "Plomería": [
       "plomer","plomero","fontaner","agua","fuga","gote","caner","cano","caño",
@@ -411,7 +412,6 @@ function initSearchBar() {
     );
     if (!card) return;
     document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth" });
-    // Remove filtros e destaca
     grid.querySelectorAll(".service-card").forEach((c) => (c.style.display = ""));
     card.classList.add("is-hot");
     setTimeout(() => card.classList.remove("is-hot"), 1800);
@@ -427,7 +427,6 @@ function initSearchBar() {
       return;
     }
 
-    // Fallback: filtro simples por tags/título
     const nq = norm(q);
     let any = false;
     grid.querySelectorAll(".service-card").forEach((c) => {
@@ -438,7 +437,6 @@ function initSearchBar() {
     });
 
     if (!any) {
-      // Se nada encontrado, reexibe tudo para não sumir a seção
       setTimeout(() => grid.querySelectorAll(".service-card").forEach((c) => (c.style.display = "")), 1800);
     }
 
@@ -530,6 +528,37 @@ function initStepper(forceRevalidate = false) {
     });
 
   if (forceRevalidate) update(); else update();
+}
+
+/* ============ FAQ (accordion acessível) ============ */
+function initFAQ() {
+  const items = document.querySelectorAll(".faq-accordion .faq-item");
+  if (!items.length) return;
+
+  items.forEach((item, idx) => {
+    const btn = item.querySelector(".faq-q");
+    const panel = item.querySelector(".faq-a");
+
+    // Garante IDs únicos caso não existam
+    if (btn && panel) {
+      const pid = panel.id || `faq-a-${idx + 1}`;
+      panel.id = pid;
+      btn.setAttribute("aria-controls", pid);
+      btn.setAttribute("aria-expanded", item.getAttribute("aria-expanded") === "true" ? "true" : "false");
+    }
+
+    btn?.addEventListener("click", () => {
+      const isOpen = item.getAttribute("aria-expanded") === "true";
+      // Fecha todos
+      items.forEach((i) => {
+        i.setAttribute("aria-expanded", "false");
+        i.querySelector(".faq-q")?.setAttribute("aria-expanded", "false");
+      });
+      // Abre/fecha o clicado
+      item.setAttribute("aria-expanded", isOpen ? "false" : "true");
+      btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    });
+  });
 }
 
 /* ============ A11y: focus trap ============ */
