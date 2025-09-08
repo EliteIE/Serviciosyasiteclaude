@@ -17,11 +17,15 @@
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
-  <!-- Fallback mínimo + ajustes locais dos cards com imagem, hover e "Cómo Funciona" flow -->
+  <!-- Fallback mínimo + ajustes locais dos cards com imagem, hover e "Cómo Funciona" flow + FAQ + logo colorido -->
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
     .logo-img{height:28px;width:auto;display:block}
+
+    /* Logo com cores da marca: “Servicios” azul, “YA” laranja */
+    .logo .logo-text{ color: var(--primary); font-weight: 800; }
+    .logo .logo-text strong{ color: var(--accent); text-transform: uppercase; }
 
     /* ---- Cards com imagem (sem carrossel) ---- */
     .cards-with-media .service-card{position:relative; overflow:hidden; transition:transform .2s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease}
@@ -30,10 +34,8 @@
     .cards-with-media .service-card:hover{transform:translateY(-3px); box-shadow:0 18px 34px rgba(13,71,161,.12); background:linear-gradient(0deg, rgba(13,71,161,.06), #fff 42%)}
     .cards-with-media .service-card:hover h3{color:#0D47A1}
     .cards-with-media .service-card:hover .media img{transform:scale(1.04)}
-    /* Destaque rápido quando a busca encontra um serviço */
     .service-card.is-hot{outline:3px solid #F97316; outline-offset:3px}
 
-    /* Centraliza o título da seção (garantia, mesmo sem CSS externo) */
     .section-title.center{text-align:center}
 
     /* ===== Cómo Funciona: fluxo moderno ===== */
@@ -93,6 +95,37 @@
       .flow-step{ padding:16px 16px 18px }
       .flow-dot{ left:calc(50% - 3px) }
     }
+
+    /* ===== Preguntas frecuentes (accordion) ===== */
+    .faq{
+      background: linear-gradient(135deg, rgba(13,71,161,.08) 0%, rgba(34,197,94,.12) 100%);
+      border-block: 1px solid #EEF2F7;
+    }
+    .faq-accordion{ display:grid; gap:12px; margin-top:14px }
+    .faq-item{
+      background:#fff; border:1px solid #E5E7EB; border-radius:16px;
+      box-shadow:var(--shadow); overflow:hidden;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    .faq-item[aria-expanded="true"]{ border-color:#DBEAFE; box-shadow:0 16px 30px rgba(2,6,23,.12) }
+    .faq-q{
+      width:100%; text-align:left; padding:16px 18px; font-weight:700; color:var(--text);
+      display:flex; justify-content:space-between; align-items:center; gap:12px; cursor:pointer; background:#fff; border:0;
+    }
+    .faq-q .q-left{display:flex; align-items:center; gap:.6rem}
+    .faq-q .q-bullet{
+      width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
+      background:#E6F0FF; color:var(--primary); font-weight:800; box-shadow: inset 0 0 0 2px rgba(13,71,161,.10);
+      font-size:.95rem;
+    }
+    .faq-q::after{
+      content:"+"; font-weight:900; color:#64748B; font-size:20px; line-height:1;
+    }
+    .faq-item[aria-expanded="true"] .faq-q::after{ content:"−" }
+    .faq-a{
+      display:none; padding:0 18px 18px; color:var(--muted); border-top:1px solid #EEF2F7;
+    }
+    .faq-item[aria-expanded="true"] .faq-a{ display:block }
   </style>
 </head>
 
@@ -264,7 +297,6 @@
         <li class="flow-step">
           <span class="flow-dot" aria-hidden="true"></span>
           <div class="flow-icon" aria-hidden="true">
-            <!-- Cursor/selección -->
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 3L9.6 14.2l-2.8-2.3-1.2 1.6 5.8 4.7 1.2-1.5-2.1-2.6L19 13z"/></svg>
           </div>
           <div class="flow-body">
@@ -278,7 +310,6 @@
         <li class="flow-step">
           <span class="flow-dot" aria-hidden="true"></span>
           <div class="flow-icon" aria-hidden="true">
-            <!-- Calendario -->
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2zm14 8H3v10h18V10z"/></svg>
           </div>
           <div class="flow-body">
@@ -292,7 +323,6 @@
         <li class="flow-step">
           <span class="flow-dot" aria-hidden="true"></span>
           <div class="flow-icon" aria-hidden="true">
-            <!-- Técnico/herramienta -->
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M14.7 6.3l3 3-8.4 8.4H6.3V14l8.4-8.4zm4.6-.9l-1.7-1.7a1 1 0 0 0-1.4 0l-1.2 1.2 3 3 1.3-1.2a1 1 0 0 0 0-1.3z"/></svg>
           </div>
           <div class="flow-body">
@@ -306,7 +336,6 @@
         <li class="flow-step">
           <span class="flow-dot" aria-hidden="true"></span>
           <div class="flow-icon" aria-hidden="true">
-            <!-- Estrella -->
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.3l-5.5 3 1.1-6.4L3 9.7l6.5-1 2.5-5.3 2.5 5.3 6.5 1-4.6 4.2 1.1 6.4-5.5-3z"/></svg>
           </div>
           <div class="flow-body">
@@ -316,6 +345,54 @@
           </div>
         </li>
       </ol>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes -->
+  <section id="faq" class="section faq" data-aos="fade-up">
+    <div class="container">
+      <h2 class="section-title center">Preguntas frecuentes</h2>
+
+      <div class="faq-accordion" role="region" aria-label="Preguntas frecuentes">
+        <!-- Item 1 -->
+        <div class="faq-item" aria-expanded="true">
+          <button class="faq-q" type="button" aria-controls="faq-a1" aria-expanded="true">
+            <span class="q-left">
+              <span class="q-bullet">1</span>
+              ¿Cómo reservo un servicio?
+            </span>
+          </button>
+          <div id="faq-a1" class="faq-a">
+            <p>Seleccioná la categoría, completá los detalles y elegí fecha y horario. ¡Listo! Recibirás confirmación inmediata.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="faq-item" aria-expanded="false">
+          <button class="faq-q" type="button" aria-controls="faq-a2" aria-expanded="false">
+            <span class="q-left">
+              <span class="q-bullet">2</span>
+              ¿Cómo se seleccionan los profesionales?
+            </span>
+          </button>
+          <div id="faq-a2" class="faq-a">
+            <p>Todos nuestros técnicos pasan un proceso de verificación de antecedentes, certificaciones y calificaciones de clientes.</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="faq-item" aria-expanded="false">
+          <button class="faq-q" type="button" aria-controls="faq-a3" aria-expanded="false">
+            <span class="q-left">
+              <span class="q-bullet">3</span>
+              ¿Puedo reprogramar o cancelar?
+            </span>
+          </button>
+          <div id="faq-a3" class="faq-a">
+            <p>Sí, podés reprogramar o cancelar hasta 24 horas antes del servicio sin costo adicional.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -503,7 +580,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script defer src="./js/main.js?v=1.4.2"></script>
 
-  <!-- Busca inteligente (override suave do listener antigo) -->
+  <!-- Busca inteligente (override suave do listener antigo) + FAQ -->
   <script>
     (function(){
       const norm = s => (s||'')
@@ -513,7 +590,6 @@
         .replace(/\s+/g,' ')
         .trim();
 
-      // Dicionário de intenções (sinônimos, variações e erros comuns)
       const catalog = {
         'Plomería': [
           'plomer','plomero','fontaner','agua','fuga','gote','caner','cano','caño',
@@ -563,7 +639,6 @@
         let form = document.getElementById('searchForm');
         if(!form) return;
 
-        // Remove handlers antigos clonando o form
         const clone = form.cloneNode(true);
         form.parentNode.replaceChild(clone, form);
         form = clone;
@@ -573,13 +648,11 @@
           const q = document.getElementById('searchInput').value;
           const svc = detectService(q);
 
-          // Limpa possíveis filtros antigos
           document.querySelectorAll('.service-card').forEach(c => c.style.display = '');
 
           if(svc){
             highlightCard(svc);
           }else{
-            // fallback: busca simples por tags/title
             const query = norm(q);
             let any=false;
             document.querySelectorAll('.service-card').forEach(c=>{
@@ -589,15 +662,29 @@
               any = any || match;
             });
             if(!any){
-              // se nada, reexibe tudo para não “sumir” os cards
               document.querySelectorAll('.service-card').forEach(c => c.style.display = '');
             }
           }
         });
       }
 
-      // Aguarda main.js (defer) finalizar; então instala nossa busca
-      window.addEventListener('DOMContentLoaded', installSmartSearch);
+      function initFAQ(){
+        const items = document.querySelectorAll('.faq-item');
+        items.forEach(item=>{
+          const btn = item.querySelector('.faq-q');
+          btn.addEventListener('click', ()=>{
+            const isOpen = item.getAttribute('aria-expanded') === 'true';
+            items.forEach(i=>{ i.setAttribute('aria-expanded','false'); i.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
+            item.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+          });
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', ()=>{
+        installSmartSearch();
+        initFAQ();
+      });
     })();
   </script>
 </body>
