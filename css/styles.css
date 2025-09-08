@@ -1,6 +1,6 @@
 /* =========================
    Servicios Ya - styles.css
-   v1.7.1 (grid + hover + flow fixes)
+   v1.8.0 (brand colors + flow chips + FAQ)
    ========================= */
 
 /* ==== Reset & tokens ==== */
@@ -52,8 +52,13 @@ a:hover{text-decoration:underline}
 }
 .site-header.scrolled{box-shadow:0 6px 18px rgba(2,6,23,.06)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-weight:800;font-size:1.1rem}
+
+/* Marca no topo: "Servicios" azul, "Ya" laranja */
+.logo{display:flex;align-items:center;gap:.6rem;color:var(--primary);font-weight:800;font-size:1.1rem}
 .logo .logo-img{height:28px;width:auto;object-fit:contain}
+.logo .logo-text{color:var(--primary)}
+.logo .logo-text strong{color:var(--accent)}
+
 .nav{display:flex;align-items:center;gap:1rem}
 .nav a{color:var(--text);opacity:.85;line-height:1}
 .nav a:hover{opacity:1}
@@ -236,6 +241,57 @@ a:hover{text-decoration:underline}
 }
 .flow-body h3{ margin:.1rem 0 .35rem; font-size:18px }
 .flow-body p { margin:0; color:#6B7280 }
+
+/* =========================================================
+   FAQ — acordeão com fundo no estilo do herói
+   ========================================================= */
+.faq-section{
+  background:linear-gradient(135deg, rgba(13,71,161,.06) 0%, rgba(34,197,94,.08) 100%);
+  border-block:1px solid #EEF2F7;
+}
+.faq-wrap{
+  background:#fff; /* base branca com halo */
+  background:linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.92));
+  padding:26px;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+}
+.faq-accordion{ display:grid; gap:14px; margin-top:12px }
+.faq-item{
+  background:#fff;
+  border:1px solid #E5E7EB;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.faq-item:hover{ transform:translateY(-2px); box-shadow:0 14px 28px rgba(2,6,23,.10) }
+.faq-q{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:16px 18px; background:transparent; border:0; cursor:pointer;
+  font-weight:700; font-size:1rem; text-align:left; color:var(--text);
+}
+.faq-q:focus-visible{ outline:3px solid #93c5fd; outline-offset:2px; border-radius:8px }
+
+/* ícone (+) que vira x ao abrir */
+.faq-q::after{
+  content:"+";
+  display:inline-grid; place-items:center;
+  width:28px; height:28px; border-radius:9999px;
+  background:#E6F0FF; color:var(--primary);
+  font-weight:900; line-height:1;
+  transition:transform .25s ease, background .25s ease, color .25s ease;
+}
+.faq-item[aria-expanded="true"] .faq-q::after{
+  transform:rotate(45deg);
+  background:#0D47A1; color:#fff;
+}
+
+/* animação de abertura com grid */
+.faq-panel{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s ease }
+.faq-item[aria-expanded="true"] .faq-panel{ grid-template-rows:1fr }
+.faq-a{ overflow:hidden }
+.faq-a > div{ padding:14px 18px 18px; color:var(--muted); border-top:1px solid #EEF2F7 }
 
 /* ==== CTA ==== */
 .cta{background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);border-block:1px solid #EEF2F7}
