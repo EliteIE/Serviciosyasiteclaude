@@ -17,7 +17,7 @@
   <!-- AOS Animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
 
-  <!-- Fallback mínimo + ajustes locais dos cards com imagem e hover -->
+  <!-- Fallback mínimo + ajustes locais dos cards com imagem, hover e "Cómo Funciona" flow -->
   <style>
     .social a svg, .footer-column svg, .whatsapp-btn svg { width: 24px; height: 24px; }
     .whatsapp-btn { position: fixed; right: 16px; bottom: 16px; display: inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#25D366; box-shadow:0 8px 24px rgba(0,0,0,.15); z-index:999; }
@@ -35,6 +35,64 @@
 
     /* Centraliza o título da seção (garantia, mesmo sem CSS externo) */
     .section-title.center{text-align:center}
+
+    /* ===== Cómo Funciona: fluxo moderno ===== */
+    .how--flow .how-subtitle{ text-align:center; color:#6B7280; margin:-6px 0 22px }
+    .flow{
+      --track-h: 6px;
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+      padding-top: 28px;
+    }
+    .flow::before{
+      content:"";
+      position:absolute; left:8px; right:8px; top:18px; height:var(--track-h);
+      background: linear-gradient(90deg, rgba(13,71,161,.25), rgba(34,197,94,.25));
+      border-radius: 9999px;
+    }
+    .flow-step{
+      position:relative; background:#fff; border:1px solid #E5E7EB; border-radius:18px;
+      padding:18px; box-shadow:0 10px 24px rgba(2,6,23,.08);
+      transition: transform .18s ease, box-shadow .22s ease, border-color .18s ease, background .18s;
+    }
+    .flow-step:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(2,6,23,.12);
+      border-color: rgba(13,71,161,.28);
+      background: linear-gradient(180deg,#fff 0%,#F7FBFF 100%);
+    }
+    .flow-dot{
+      position:absolute; top:10px; left:50%; transform:translateX(-50%);
+      width:14px; height:14px; border-radius:50%;
+      background:#fff; box-shadow:0 0 0 4px #fff inset, 0 0 0 2px rgba(13,71,161,.25);
+    }
+    .flow-icon{
+      width:56px; height:56px; border-radius:50%;
+      display:grid; place-items:center; color:#fff;
+      background: linear-gradient(135deg, #0D47A1 0%, #22c55e 100%);
+      box-shadow:0 10px 24px rgba(13,71,161,.20);
+      margin-bottom:10px;
+    }
+    .flow-icon svg{ width:28px; height:28px }
+    .step-chip{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:32px; height:32px; border-radius:9999px; font-weight:800;
+      color:#0D47A1; background:#E6F0FF; margin-bottom:8px;
+      box-shadow: inset 0 0 0 2px rgba(13,71,161,.10);
+    }
+    .flow-body h3{ margin:.1rem 0 .35rem; font-size:18px }
+    .flow-body p { margin:0; color:#6B7280 }
+    @media (max-width: 960px){
+      .flow{ grid-template-columns: repeat(2,1fr) }
+    }
+    @media (max-width: 640px){
+      .flow{ grid-template-columns: 1fr }
+      .flow::before{ left:50%; right:auto; width:6px; height:calc(100% - 18px); top:18px; background: linear-gradient(180deg, rgba(13,71,161,.25), rgba(34,197,94,.25)) }
+      .flow-step{ padding:16px 16px 18px }
+      .flow-dot{ left:calc(50% - 3px) }
+    }
   </style>
 </head>
 
@@ -195,33 +253,69 @@
     </div>
   </section>
 
-  <!-- Cómo Funciona -->
-  <section id="como-funciona" class="section how" data-aos="fade-up">
+  <!-- Cómo Funciona (versão fluxo moderno) -->
+  <section id="como-funciona" class="section how how--flow" data-aos="fade-up">
     <div class="container">
       <h2 class="section-title center">Cómo Funciona</h2>
       <p class="how-subtitle">En pocos pasos accedés a un servicio de calidad, sin complicaciones.</p>
-      <div class="how-grid">
-        <div class="how-step card">
-          <div class="step-number">1</div>
-          <h3>Elegí el servicio</h3>
-          <p>Seleccioná la categoría y describí el trabajo que necesitás.</p>
-        </div>
-        <div class="how-step card">
-          <div class="step-number">2</div>
-          <h3>Reservá online</h3>
-          <p>Elegí día (desde mañana) y horario disponible.</p>
-        </div>
-        <div class="how-step card">
-          <div class="step-number">3</div>
-          <h3>Recibí al profesional</h3>
-          <p>Un técnico calificado llegará y realizará el trabajo con excelencia.</p>
-        </div>
-        <div class="how-step card">
-          <div class="step-number">4</div>
-          <h3>Calificá y pagá</h3>
-          <p>Tu opinión nos ayuda a garantizar la calidad del servicio.</p>
-        </div>
-      </div>
+
+      <ol class="flow" role="list">
+        <!-- 1 -->
+        <li class="flow-step">
+          <span class="flow-dot" aria-hidden="true"></span>
+          <div class="flow-icon" aria-hidden="true">
+            <!-- Cursor/selección -->
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 3L9.6 14.2l-2.8-2.3-1.2 1.6 5.8 4.7 1.2-1.5-2.1-2.6L19 13z"/></svg>
+          </div>
+          <div class="flow-body">
+            <div class="step-chip">1</div>
+            <h3>Elegí el servicio</h3>
+            <p>Seleccioná la categoría y describí el trabajo que necesitás.</p>
+          </div>
+        </li>
+
+        <!-- 2 -->
+        <li class="flow-step">
+          <span class="flow-dot" aria-hidden="true"></span>
+          <div class="flow-icon" aria-hidden="true">
+            <!-- Calendario -->
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2zm14 8H3v10h18V10z"/></svg>
+          </div>
+          <div class="flow-body">
+            <div class="step-chip">2</div>
+            <h3>Reservá online</h3>
+            <p>Elegí día (desde mañana) y horario disponible.</p>
+          </div>
+        </li>
+
+        <!-- 3 -->
+        <li class="flow-step">
+          <span class="flow-dot" aria-hidden="true"></span>
+          <div class="flow-icon" aria-hidden="true">
+            <!-- Técnico/herramienta -->
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M14.7 6.3l3 3-8.4 8.4H6.3V14l8.4-8.4zm4.6-.9l-1.7-1.7a1 1 0 0 0-1.4 0l-1.2 1.2 3 3 1.3-1.2a1 1 0 0 0 0-1.3z"/></svg>
+          </div>
+          <div class="flow-body">
+            <div class="step-chip">3</div>
+            <h3>Recibí al profesional</h3>
+            <p>Un técnico calificado llegará y realizará el trabajo con excelencia.</p>
+          </div>
+        </li>
+
+        <!-- 4 -->
+        <li class="flow-step">
+          <span class="flow-dot" aria-hidden="true"></span>
+          <div class="flow-icon" aria-hidden="true">
+            <!-- Estrella -->
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.3l-5.5 3 1.1-6.4L3 9.7l6.5-1 2.5-5.3 2.5 5.3 6.5 1-4.6 4.2 1.1 6.4-5.5-3z"/></svg>
+          </div>
+          <div class="flow-body">
+            <div class="step-chip">4</div>
+            <h3>Calificá y pagá</h3>
+            <p>Tu opinión nos ayuda a garantizar la calidad del servicio.</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -414,9 +508,9 @@
     (function(){
       const norm = s => (s||'')
         .toLowerCase()
-        .normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')  // remove acentos
-        .replace(/[^a-z0-9\\s]/g,' ')                       // limpa pontuação
-        .replace(/\\s+/g,' ')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // remove acentos
+        .replace(/[^a-z0-9\s]/g,' ')                       // limpa pontuação
+        .replace(/\s+/g,' ')
         .trim();
 
       // Dicionário de intenções (sinônimos, variações e erros comuns)
