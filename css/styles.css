@@ -1,6 +1,6 @@
 /* =========================
    Servicios Ya - styles.css
-   v1.6.0 (grid + hover + smart tweaks)
+   v1.7.0 (grid + hover + flow)
    ========================= */
 
 /* ==== Reset & tokens ==== */
@@ -159,9 +159,10 @@ a:hover{text-decoration:underline}
   border-color:#DBEAFE;               /* azul clarinho */
   box-shadow:0 16px 30px rgba(2,6,23,.12);
 }
+.service-card:hover h3{ color: var(--primary) }
 .service-card:hover .media img{ transform:scale(1.06) }
 
-/* Destaque quando a busca encontra (is-hot) */
+/* Estados auxiliares para busca */
 @keyframes hotPulse{
   0%{box-shadow:0 0 0 0 rgba(59,130,246,.35)}
   100%{box-shadow:0 0 0 12px rgba(59,130,246,0)}
@@ -170,13 +171,58 @@ a:hover{text-decoration:underline}
   border-color:#93c5fd;
   animation:hotPulse 900ms ease-out 2;
 }
+.service-card.is-dim{ opacity:.35; filter:grayscale(.1) } /* compat. com scripts antigos */
 
-/* ==== Cómo Funciona ==== */
-.how .center{text-align:center}
-.how-subtitle{text-align:center;color:var(--muted);margin:-6px 0 18px}
-.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.how-step{background:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow);border:1px solid #E5E7EB}
-.step-number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#E6F0FF;color:var(--primary);font-weight:800;margin-bottom:.4rem}
+/* =========================================================
+   CÓMO FUNCIONA — fluxo moderno com linha de progresso
+   ========================================================= */
+.how--flow .how-subtitle{ text-align:center; color:var(--muted); margin:-6px 0 22px }
+.flow{
+  --track-h: 6px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  padding-top: 28px;
+}
+.flow::before{
+  content:"";
+  position:absolute; left:8px; right:8px; top:18px; height:var(--track-h);
+  background: linear-gradient(90deg, rgba(13,71,161,.25), rgba(34,197,94,.25));
+  border-radius: 9999px;
+}
+.flow-step{
+  position:relative; background:#fff; border:1px solid #E5E7EB; border-radius:18px;
+  padding:18px; box-shadow:var(--shadow);
+  transition: transform .18s ease, box-shadow .22s ease, border-color .18s ease, background .18s;
+}
+.flow-step:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(2,6,23,.12);
+  border-color: rgba(13,71,161,.28);
+  background: linear-gradient(180deg,#fff 0%,#F7FBFF 100%);
+}
+.flow-dot{
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:14px; height:14px; border-radius:50%;
+  background:#fff; box-shadow:0 0 0 4px #fff inset, 0 0 0 2px rgba(13,71,161,.25);
+}
+.flow-icon{
+  width:56px; height:56px; border-radius:50%;
+  display:grid; place-items:center; color:#fff;
+  background: linear-gradient(135deg, #0D47A1 0%, #22c55e 100%);
+  box-shadow:0 10px 24px rgba(13,71,161,.20);
+  margin-bottom:10px;
+}
+.flow-icon svg{ width:28px; height:28px }
+.step-chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border-radius:9999px; font-weight:800;
+  color:#0D47A1; background:#E6F0FF; margin-bottom:8px;
+  box-shadow: inset 0 0 0 2px rgba(13,71,161,.10);
+}
+.flow-body h3{ margin:.1rem 0 .35rem; font-size:18px }
+.flow-body p { margin:0; color:#6B7280 }
 
 /* ==== CTA ==== */
 .cta{background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);border-block:1px solid #EEF2F7}
@@ -249,12 +295,21 @@ textarea{resize:vertical}
   }
   .nav.active{display:flex}
   .nav .btn-primary{width:100%;margin:4px 0 0}
+
+  /* Cómo Funciona em 2 colunas */
+  .flow{ grid-template-columns: repeat(2,1fr) }
 }
 @media (max-width: 640px){
   .services-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
-  .how-grid{grid-template-columns:1fr}
   .search-bar{flex-direction:column;align-items:stretch}
   .search-btn{width:100%}
   .hero-photo{height:300px}
+
+  /* Cómo Funciona vertical */
+  .flow{ grid-template-columns: 1fr }
+  .flow::before{
+    left:50%; right:auto; width:6px; height:calc(100% - 18px); top:18px;
+    background: linear-gradient(180deg, rgba(13,71,161,.25), rgba(34,197,94,.25));
+  }
 }
